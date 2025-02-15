@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ecoBites-web/static/css/main.756bb6cb.css",
+    "main.js": "/ecoBites-web/static/js/main.ba93721c.js",
+    "index.html": "/ecoBites-web/index.html",
+    "main.756bb6cb.css.map": "/ecoBites-web/static/css/main.756bb6cb.css.map",
+    "main.ba93721c.js.map": "/ecoBites-web/static/js/main.ba93721c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.756bb6cb.css",
+    "static/js/main.ba93721c.js"
+  ]
+}
