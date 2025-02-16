@@ -52,7 +52,6 @@ const Cooking: FunctionComponent = () => {
 
   return (
     <MainLayout>
-      Cooking / {cuisineId}
       {recipe ? (
         <RecipeCard
           {...recipe}

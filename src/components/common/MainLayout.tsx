@@ -52,6 +52,7 @@ const MainLayout: FunctionComponent<PropsWithChildren> = ({ children }: PropsWit
           background: theme.palette.background.default,
           p: 0.5,
           gap: 0.5,
+          zIndex: theme.zIndex.appBar,
         })}
         elevation={4}
       >
@@ -86,7 +87,7 @@ const MainLayout: FunctionComponent<PropsWithChildren> = ({ children }: PropsWit
       >
         {children}
       </Container>
-      <Paper sx={{ height: 56 }} elevation={4}>
+      <Paper sx={(theme) => ({ height: 56, zIndex: theme.zIndex.appBar })} elevation={4}>
         <Fab
           color="primary"
           sx={(theme) => ({

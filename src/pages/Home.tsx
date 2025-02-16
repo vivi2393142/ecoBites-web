@@ -17,12 +17,13 @@ import IconButton from '@mui/material/IconButton';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 import { mockCookHistory, mockRecipes } from 'libs/mockData';
+import { useScanResultAtom } from 'stores/atoms/scanResult';
+import { pageSettings } from 'libs/settings';
+import { Page, Recipe } from 'libs/schema';
 
 import MainLayout from 'components/common/MainLayout';
 import RecipeCard from 'components/RecipeCard';
 import CookHistoryCard from 'components/CookHistoryCard';
-import { pageSettings } from 'libs/settings';
-import { Page, Recipe } from 'libs/schema';
 
 const Home: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ const Home: FunctionComponent = () => {
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  const { addScanResult } = useScanResultAtom();
 
   // check is mobile or not
   const checkIsMobileDevice = useCallback(() => {
@@ -94,16 +97,25 @@ const Home: FunctionComponent = () => {
   }, []);
 
   // handle file change
-  const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImageSrc(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  }, []);
+  const handleFileChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setImageSrc(event.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+
+        // TODO: change to call scan api
+        addScanResult({ recommendedRecipes: mockRecipes });
+        window.setTimeout(() => {
+          navigate(`${pageSettings[Page.SCAN].route}`);
+        }, 1000);
+      }
+    },
+    [addScanResult, navigate],
+  );
 
   const handleClickScan = useCallback(() => {
     if (isMobile && checkCameraSupport()) {

@@ -53,10 +53,10 @@ const RecipeCardHeader: FunctionComponent<RecipeCardHeaderProps> = ({
   ingredients,
   children,
 }) => (
-  <CardContent>
+  <CardContent sx={type === 'expand-detail' ? { p: 0 } : {}}>
     {children}
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-      <Typography variant="subtitle2">{name}</Typography>
+      <Typography variant={type !== 'simple' ? 'h6' : 'subtitle2'}>{name}</Typography>
       <TimeAndDifficulty time={time} difficulty={difficulty} />
       {type === 'simple' && (
         <Box sx={{ display: 'flex', gap: 1, overflow: 'auto', scrollbarWidth: 'none' }}>
@@ -66,6 +66,67 @@ const RecipeCardHeader: FunctionComponent<RecipeCardHeaderProps> = ({
         </Box>
       )}
     </Box>
+  </CardContent>
+);
+
+type RecipeStepsProps = Pick<RecipeCardProps, 'type' | 'ingredients' | 'instructions' | 'children'>;
+
+const RecipeSteps: FunctionComponent<RecipeStepsProps> = ({
+  type,
+  ingredients,
+  instructions,
+  children,
+}: RecipeStepsProps) => (
+  <CardContent sx={type === 'expand-detail' ? { p: 0 } : {}}>
+    <Typography variant="h6">Ingredients</Typography>
+    <List>
+      {ingredients.map((ingredient) => (
+        <ListItem key={ingredient} sx={{ p: 0 }}>
+          <ListItemIcon sx={{ minWidth: '16px' }}>
+            <FiberManualRecordIcon sx={{ fontSize: '0.5rem' }} />
+          </ListItemIcon>
+          <ListItemText primary={ingredient} sx={{ m: 0 }} />
+        </ListItem>
+      ))}
+    </List>
+    <Typography variant="h6">Steps</Typography>
+    <List>
+      {instructions.map((step, idx) => (
+        <ListItem
+          // eslint-disable-next-line react/no-array-index-key
+          key={idx}
+          sx={{
+            px: 0,
+            pt: 0,
+            pb: 0.75,
+            display: 'flex',
+            gap: 0.5,
+            alignItems: 'flex-start',
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: '16px' }}>
+            <Box
+              sx={(theme) => ({
+                width: 14,
+                height: 14,
+                borderRadius: '50%',
+                backgroundColor: theme.palette.text.primary,
+                color: theme.palette.primary.contrastText,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '10px',
+                mt: 0.5,
+              })}
+            >
+              {idx + 1}
+            </Box>
+          </ListItemIcon>
+          <ListItemText primary={step} sx={{ m: 0 }} />
+        </ListItem>
+      ))}
+    </List>
+    {children}
   </CardContent>
 );
 
@@ -97,74 +158,52 @@ const RecipeCard: FunctionComponent<RecipeCardProps> = ({
   }, [expanded]);
 
   return (
-    <Card sx={sx}>
-      {onClick ? (
-        <CardActionArea onClick={onClick}>
+    <Card
+      sx={{
+        ...sx,
+        ...(type === 'expand-detail'
+          ? { background: 'none', boxShadow: 'none', overflow: 'visible' }
+          : {}),
+      }}
+    >
+      <Box sx={type !== 'simple' ? { display: 'flex', gap: 2 } : {}}>
+        {onClick ? (
+          <CardActionArea onClick={onClick}>
+            <RecipeCardHeader {...headerProps} />
+          </CardActionArea>
+        ) : (
           <RecipeCardHeader {...headerProps} />
-        </CardActionArea>
-      ) : (
-        <RecipeCardHeader {...headerProps} />
-      )}
-      {type !== 'simple' && (
-        <>
+        )}
+        {type === 'collapse-detail' && (
           <CardActions disableSpacing>
             <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
               aria-expanded={expanded}
               aria-label="show more"
+              size="small"
             >
-              <ExpandMoreIcon />
+              <ExpandMoreIcon fontSize="small" />
             </ExpandMore>
           </CardActions>
+        )}
+      </Box>
+      {type === 'collapse-detail' && (
+        <>
           <Divider />
           <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography variant="h4">Ingredients</Typography>
-              {ingredients.map((ingredient) => (
-                <Typography key={ingredient} variant="body1">
-                  {ingredient}
-                </Typography>
-              ))}
-              <List>
-                {ingredients.map((ingredient) => (
-                  <ListItem key={ingredient}>
-                    <ListItemIcon>
-                      <FiberManualRecordIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary={ingredient} />
-                  </ListItem>
-                ))}
-              </List>
-              <Typography variant="h4">Steps</Typography>
-              <List>
-                {instructions.map((step, idx) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <ListItem key={idx}>
-                    <ListItemIcon>
-                      <div
-                        style={{
-                          width: '24px',
-                          height: '24px',
-                          borderRadius: '50%',
-                          backgroundColor: 'black',
-                          color: 'white',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '14px',
-                        }}
-                      >
-                        {idx + 1}
-                      </div>
-                    </ListItemIcon>
-                    <ListItemText primary={step} />
-                  </ListItem>
-                ))}
-              </List>
+            <RecipeSteps type={type} ingredients={ingredients} instructions={instructions}>
               {children}
-            </CardContent>
+            </RecipeSteps>
           </Collapse>
+        </>
+      )}
+      {type === 'expand-detail' && (
+        <>
+          <Divider />
+          <RecipeSteps type={type} ingredients={ingredients} instructions={instructions}>
+            {children}
+          </RecipeSteps>
         </>
       )}
     </Card>
