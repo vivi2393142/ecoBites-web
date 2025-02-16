@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "ESNEXT",
+    "module": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "jsx": "preserve",
+    "noEmit": true,
+    "isolatedModules": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src", "./*.d.ts"]
+}

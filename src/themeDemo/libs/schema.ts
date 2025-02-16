@@ -1,0 +1,16 @@
+export enum Component {
+  TextField = 'TextField',
+  List = 'List',
+  Menu = 'Menu',
+  Button = 'Button',
+  Typography = 'Typography',
+  Icon = 'Icon',
+  Snackbar = 'Snackbar',
+  Chip = 'Chip',
+  Radio = 'Radio',
+  Switch = 'Switch',
+  Checkbox = 'Checkbox',
+  Paper = 'Paper',
+  Card = 'Card',
+  Accordion = 'Accordion',
+}
