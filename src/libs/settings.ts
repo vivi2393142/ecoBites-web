@@ -35,20 +35,31 @@ export const pageSettings: Record<Page, PageSetting> = {
 };
 
 export const rewardRecipe = {
-  [RewardCuisine.BREAD]: [RewardIngredient.EGG, RewardIngredient.FLOUR],
-  [RewardCuisine.CAKE]: [
-    RewardIngredient.EGG,
-    RewardIngredient.FLOUR,
-    RewardIngredient.BUTTER,
-    RewardIngredient.APPLE,
-  ],
-  [RewardCuisine.FRIED_RICE]: [
-    RewardIngredient.MEAT,
-    RewardIngredient.VEGETABLE,
-    RewardIngredient.RICE,
-  ],
-  [RewardCuisine.SALAD]: [RewardIngredient.MEAT, RewardIngredient.VEGETABLE],
-  [RewardCuisine.FISH_AND_CHIPS]: [RewardIngredient.FISH, RewardIngredient.FLOUR],
+  [RewardCuisine.BREAD]: {
+    style: 'Bakery',
+    ingredients: [RewardIngredient.EGG, RewardIngredient.FLOUR],
+  },
+  [RewardCuisine.CAKE]: {
+    style: 'Bakery',
+    ingredients: [
+      RewardIngredient.EGG,
+      RewardIngredient.FLOUR,
+      RewardIngredient.BUTTER,
+      RewardIngredient.APPLE,
+    ],
+  },
+  [RewardCuisine.SALAD]: {
+    style: 'Cold Dishes',
+    ingredients: [RewardIngredient.MEAT, RewardIngredient.VEGETABLE],
+  },
+  [RewardCuisine.FRIED_RICE]: {
+    style: 'Chinese Cuisine',
+    ingredients: [RewardIngredient.MEAT, RewardIngredient.VEGETABLE, RewardIngredient.RICE],
+  },
+  [RewardCuisine.FISH_AND_CHIPS]: {
+    style: 'English Cuisine',
+    ingredients: [RewardIngredient.FISH, RewardIngredient.FLOUR],
+  },
 };
 
 export const ingredientToImage = {
@@ -68,4 +79,23 @@ export const cuisineToImage = {
   [RewardCuisine.FRIED_RICE]: friedRiceImg,
   [RewardCuisine.SALAD]: saladImg,
   [RewardCuisine.FISH_AND_CHIPS]: fishAndChipsImg,
+};
+
+export const rewardIngredientLabel = {
+  EGG: 'Egg',
+  FLOUR: 'Flour',
+  BUTTER: 'Butter',
+  APPLE: 'Apple',
+  VEGETABLE: 'Vegetable',
+  MEAT: 'Meat',
+  RICE: 'Rice',
+  FISH: 'Fish',
+};
+
+export const rewardCuisineLabel = {
+  BREAD: 'Bread',
+  CAKE: 'Cake',
+  FRIED_RICE: 'Fried Rice',
+  SALAD: 'Salad',
+  FISH_AND_CHIPS: 'Fish & Chips',
 };

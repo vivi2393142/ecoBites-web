@@ -25,7 +25,9 @@ const Snackbar: FunctionComponent = () => {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       onClose={closeSnackbar}
     >
-      <StyledAlert severity={severity}>{message}</StyledAlert>
+      <StyledAlert severity={severity} sx={(theme) => ({ boxShadow: theme.shadows[2] })}>
+        {message}
+      </StyledAlert>
     </MuiSnackbar>
   );
 };

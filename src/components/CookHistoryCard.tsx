@@ -47,7 +47,7 @@ const CookHistoryCard: FunctionComponent<CookHistoryCardProps> = ({
           >
             <OutdoorGrillIcon fontSize="large" />
             <Typography variant="body2" align="center" sx={{ mt: 1, px: 2 }}>
-              {isDone ? 'No image' : 'Your haven’t finish this cuisine, tap to continue.'}{' '}
+              {isDone ? 'No image' : 'Your haven’t finish this cuisine, tap to continue.'}
             </Typography>
           </Box>
         )}

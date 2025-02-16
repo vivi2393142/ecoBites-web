@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { FunctionComponent, PropsWithChildren } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -18,8 +18,10 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 import { Page } from 'libs/schema';
 import { pageSettings } from 'libs/settings';
-
+import { uploadPhotoFile } from 'libs/utils';
 import { ReactComponent as AvatarIcon } from 'assets/icon/avatar.svg';
+import { useScanResultAtom } from 'stores/atoms/scanResult';
+import { mockRecipes } from 'libs/mockData';
 
 const settings = [
   {
@@ -30,11 +32,36 @@ const settings = [
   { page: Page.REWARDS, label: 'Rewards', icon: <EmojiEventsIcon /> },
 ];
 
-const MainLayout: FunctionComponent<PropsWithChildren> = ({ children }: PropsWithChildren) => {
+interface MainLayoutProps extends PropsWithChildren {
+  noPadding?: boolean;
+}
+
+const MainLayout: FunctionComponent<MainLayoutProps> = ({
+  noPadding,
+  children,
+}: MainLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const value = useMemo(() => location.pathname.substring(1).toUpperCase(), [location]);
+
+  const [, setUploadedPhoto] = useState<string | null>(null);
+
+  const { addScanResult } = useScanResultAtom();
+
+  const handleClickCamera = useCallback(() => {
+    void (async () => {
+      try {
+        const uploadedPhoto = await uploadPhotoFile();
+        setUploadedPhoto(uploadedPhoto);
+        // TODO: call api to get results
+        addScanResult({ recommendedRecipes: mockRecipes });
+        navigate(pageSettings[Page.SCAN].route);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [navigate, addScanResult]);
 
   return (
     <Box
@@ -81,8 +108,9 @@ const MainLayout: FunctionComponent<PropsWithChildren> = ({ children }: PropsWit
           display: 'flex',
           flexDirection: 'column',
           gap: 0.75,
-          py: 2,
+          py: noPadding ? 0 : 2,
           height: '100vh - 56px - 72px',
+          ...(noPadding && { p: 0 }),
         }}
       >
         {children}
@@ -98,6 +126,7 @@ const MainLayout: FunctionComponent<PropsWithChildren> = ({ children }: PropsWit
             background: theme.palette.text.secondary,
             color: theme.palette.primary.contrastText,
           })}
+          onClick={handleClickCamera}
         >
           <CameraAltIcon />
           <Typography
@@ -131,6 +160,10 @@ const MainLayout: FunctionComponent<PropsWithChildren> = ({ children }: PropsWit
           ))}
         </BottomNavigation>
       </Paper>
+      {/* <div>
+        <h2>結果：</h2>
+        {uploadedPhoto && <img src={uploadedPhoto} alt="Captured" />}
+      </div> */}
     </Box>
   );
 };

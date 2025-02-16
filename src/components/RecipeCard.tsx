@@ -29,11 +29,13 @@ import type { Recipe } from 'libs/schema';
 import TimeAndDifficulty from 'components/TimeAndDifficulty';
 
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+  isExpanded: boolean;
 }
 
-const ExpandMore = styled(IconButton)<ExpandMoreProps>(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+const ExpandMore = styled(IconButton, {
+  shouldForwardProp: (prop) => prop !== 'isExpanded',
+})<ExpandMoreProps>(({ theme, isExpanded }) => ({
+  transform: !isExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
   marginLeft: 'auto',
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
@@ -77,9 +79,15 @@ const RecipeSteps: FunctionComponent<RecipeStepsProps> = ({
   instructions,
   children,
 }: RecipeStepsProps) => (
-  <CardContent sx={type === 'expand-detail' ? { p: 0 } : {}}>
-    <Typography variant="h6">Ingredients</Typography>
-    <List>
+  <CardContent
+    sx={
+      type === 'expand-detail' ? { p: 0, display: 'flex', flexDirection: 'column', gap: 0.75 } : {}
+    }
+  >
+    <Typography variant="h6" sx={{ mt: 0.75 }}>
+      Ingredients
+    </Typography>
+    <List sx={{ p: 0 }}>
       {ingredients.map((ingredient) => (
         <ListItem key={ingredient} sx={{ p: 0 }}>
           <ListItemIcon sx={{ minWidth: '16px' }}>
@@ -90,7 +98,7 @@ const RecipeSteps: FunctionComponent<RecipeStepsProps> = ({
       ))}
     </List>
     <Typography variant="h6">Steps</Typography>
-    <List>
+    <List sx={{ p: 0 }}>
       {instructions.map((step, idx) => (
         <ListItem
           // eslint-disable-next-line react/no-array-index-key
@@ -177,7 +185,7 @@ const RecipeCard: FunctionComponent<RecipeCardProps> = ({
         {type === 'collapse-detail' && (
           <CardActions disableSpacing>
             <ExpandMore
-              expand={expanded}
+              isExpanded={expanded}
               onClick={handleExpandClick}
               aria-expanded={expanded}
               aria-label="show more"

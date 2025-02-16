@@ -77,7 +77,7 @@ export const mockRewardIngredients = {
   [RewardIngredient.FLOUR]: 0,
   [RewardIngredient.MEAT]: 5,
   [RewardIngredient.RICE]: 0,
-  [RewardIngredient.VEGETABLE]: 0,
+  [RewardIngredient.VEGETABLE]: 1,
 };
 
 export const mockCookHistory: Record<string, CookHistory> = {

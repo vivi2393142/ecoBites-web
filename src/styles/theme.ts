@@ -37,42 +37,42 @@ export const theme = createTheme({
   },
   typography: {
     h1: {
-      fontSize: '2.5rem',
+      fontSize: '2.3rem',
       // fontWeight: 300,
       // fontSize: '6rem',
       // lineHeight: 1.167,
       // letterSpacing: '-0.01562em',
     },
     h2: {
-      fontSize: '2rem',
+      fontSize: '1.85rem',
       // fontWeight: 300,
       // fontSize: '3.75rem',
       // lineHeight: 1.2,
       // letterSpacing: '-0.00833em',
     },
     h3: {
-      fontSize: '1.7rem',
+      fontSize: '1.5rem',
       // fontWeight: 400,
       // fontSize: '3rem',
       // lineHeight: 1.167,
       // letterSpacing: '0em',
     },
     h4: {
-      fontSize: '1.25rem',
+      fontSize: '1.2rem',
       // fontWeight: 400,
       // fontSize: '2.125rem',
       // lineHeight: 1.235,
       // letterSpacing: '0.00735em',
     },
     h5: {
-      fontSize: '1.1rem',
-      // fontWeight: 400,
+      fontSize: '1rem',
+      fontWeight: 500,
       // fontSize: '1.5rem',
       // lineHeight: 1.334,
       // letterSpacing: '0em',
     },
     h6: {
-      fontSize: '1rem',
+      fontSize: '0.9rem',
       // fontWeight: 500,
       // fontSize: '1.25rem',
       lineHeight: 1.35,
@@ -89,7 +89,7 @@ export const theme = createTheme({
       fontSize: '0.75rem',
       // fontWeight: 500,
       // fontSize: '0.875rem',
-      // lineHeight: 1.57,
+      lineHeight: 1.4,
       // letterSpacing: '0.00714em',
     },
     body1: {
@@ -174,7 +174,14 @@ export const theme = createTheme({
     MuiChip: {
       styleOverrides: {
         labelSmall: {
-          fontSize: '0.75rem',
+          fontSize: '0.7rem',
+        },
+      },
+    },
+    MuiSnackbar: {
+      styleOverrides: {
+        root: {
+          bottom: 72,
         },
       },
     },

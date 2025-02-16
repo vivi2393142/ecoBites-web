@@ -52,3 +52,40 @@ export const mapEnumValues = <
     {} as Record<T[keyof T], ReturnType<K>>,
   );
 };
+
+export const uploadPhotoFile = (): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*,video/*');
+
+    const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      input.setAttribute('capture', 'environment');
+    }
+
+    input.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
+
+      if (!file) {
+        reject(new Error('No file selected'));
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result;
+        if (typeof result === 'string') {
+          resolve(result); // 回傳 Base64
+        } else {
+          reject(new Error('Failed to read file as Base64'));
+        }
+      };
+
+      reader.readAsDataURL(file); // 轉 Base64
+    };
+
+    input.click();
+  });
