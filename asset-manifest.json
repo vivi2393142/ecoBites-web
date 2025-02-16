@@ -1,13 +1,27 @@
 {
   "files": {
     "main.css": "/ecoBites-web/static/css/main.756bb6cb.css",
-    "main.js": "/ecoBites-web/static/js/main.ba93721c.js",
+    "main.js": "/ecoBites-web/static/js/main.67a29608.js",
+    "static/media/salad.png": "/ecoBites-web/static/media/salad.66adc90fe9df037fa3d5.png",
+    "static/media/fried_rice.png": "/ecoBites-web/static/media/fried_rice.1ea62f830c163237ceb9.png",
+    "static/media/cake.png": "/ecoBites-web/static/media/cake.66c7f72f6b892b86370c.png",
+    "static/media/fish_and_chips.png": "/ecoBites-web/static/media/fish_and_chips.df3b6a32c4a20c49cc5c.png",
+    "static/media/vegetable.png": "/ecoBites-web/static/media/vegetable.31241bbeee02a810f0c9.png",
+    "static/media/bread.png": "/ecoBites-web/static/media/bread.e1172a70a8366b66189b.png",
+    "static/media/rice.png": "/ecoBites-web/static/media/rice.e2ca29de95595ab079fc.png",
+    "static/media/flour.png": "/ecoBites-web/static/media/flour.e6f4ddcc8e95dc1d9e8b.png",
+    "static/media/meat.png": "/ecoBites-web/static/media/meat.49f8ff04969a61a2a1e6.png",
+    "static/media/egg.png": "/ecoBites-web/static/media/egg.2ad126bb83c114709966.png",
+    "static/media/butter.png": "/ecoBites-web/static/media/butter.c01a2d9624e584ec0e11.png",
+    "static/media/apple.png": "/ecoBites-web/static/media/apple.dc24c86a93fa9dcd8fb1.png",
+    "static/media/fish.png": "/ecoBites-web/static/media/fish.89f476c14b3ad4b1cfc7.png",
+    "static/media/avatar.svg": "/ecoBites-web/static/media/avatar.4ddb1906c157d7cbc2facc747203ec90.svg",
     "index.html": "/ecoBites-web/index.html",
     "main.756bb6cb.css.map": "/ecoBites-web/static/css/main.756bb6cb.css.map",
-    "main.ba93721c.js.map": "/ecoBites-web/static/js/main.ba93721c.js.map"
+    "main.67a29608.js.map": "/ecoBites-web/static/js/main.67a29608.js.map"
   },
   "entrypoints": [
     "static/css/main.756bb6cb.css",
-    "static/js/main.ba93721c.js"
+    "static/js/main.67a29608.js"
   ]
 }
