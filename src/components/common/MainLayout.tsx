@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -36,16 +37,23 @@ const MainLayout: FunctionComponent<PropsWithChildren> = ({ children }: PropsWit
   const value = useMemo(() => location.pathname.substring(1).toUpperCase(), [location]);
 
   return (
-    <Box sx={{ pb: 7 }}>
-      <Box
+    <Box
+      sx={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Paper
         sx={(theme) => ({
           width: '100%',
           display: 'flex',
           alignItems: 'center',
           background: theme.palette.background.default,
-          p: 1,
+          p: 0.5,
           gap: 0.5,
         })}
+        elevation={4}
       >
         <Box sx={{ padding: 1 }}>
           <Avatar
@@ -64,34 +72,46 @@ const MainLayout: FunctionComponent<PropsWithChildren> = ({ children }: PropsWit
             <NotificationsNoneIcon />
           </IconButton>
         </Box>
-      </Box>
-      {children}
-      <Fab
-        color="primary"
-        sx={(theme) => ({
-          position: 'fixed',
-          bottom: theme.spacing(3.5),
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: theme.palette.text.secondary,
-          color: theme.palette.primary.contrastText,
-        })}
+      </Paper>
+      <Container
+        sx={{
+          flex: 1,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 0.75,
+          py: 2,
+          height: '100vh - 56px - 72px',
+        }}
       >
-        <CameraAltIcon />
-        <Typography
-          variant="caption"
-          color="textSecondary"
-          sx={{
+        {children}
+      </Container>
+      <Paper sx={{ height: 56 }} elevation={4}>
+        <Fab
+          color="primary"
+          sx={(theme) => ({
             position: 'absolute',
-            top: '100%',
-            mt: 0.25,
-            textTransform: 'none',
-          }}
+            bottom: theme.spacing(3.5),
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: theme.palette.text.secondary,
+            color: theme.palette.primary.contrastText,
+          })}
         >
-          Scan
-        </Typography>
-      </Fab>
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+          <CameraAltIcon />
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            sx={{
+              position: 'absolute',
+              top: '100%',
+              mt: 0.25,
+              textTransform: 'none',
+            }}
+          >
+            Scan
+          </Typography>
+        </Fab>
         <BottomNavigation
           showLabels
           value={value}

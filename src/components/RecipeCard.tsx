@@ -5,10 +5,11 @@ import {
   type FunctionComponent,
   type PropsWithChildren,
 } from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, type SxProps, Theme } from '@mui/material/styles';
 
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import CardActionArea from '@mui/material/CardActionArea';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -39,9 +40,40 @@ const ExpandMore = styled(IconButton)<ExpandMoreProps>(({ theme, expand }) => ({
   }),
 }));
 
+type RecipeCardHeaderProps = Pick<
+  RecipeCardProps,
+  'name' | 'time' | 'difficulty' | 'type' | 'ingredients' | 'children'
+>;
+
+const RecipeCardHeader: FunctionComponent<RecipeCardHeaderProps> = ({
+  name,
+  time,
+  difficulty,
+  type,
+  ingredients,
+  children,
+}) => (
+  <CardContent>
+    {children}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Typography variant="subtitle2">{name}</Typography>
+      <TimeAndDifficulty time={time} difficulty={difficulty} />
+      {type === 'simple' && (
+        <Box sx={{ display: 'flex', gap: 1, overflow: 'auto', scrollbarWidth: 'none' }}>
+          {ingredients.map((ingredient) => (
+            <Chip key={ingredient} label={ingredient} size="small" />
+          ))}
+        </Box>
+      )}
+    </Box>
+  </CardContent>
+);
+
 interface RecipeCardProps extends Recipe, PropsWithChildren {
   type: 'simple' | 'collapse-detail' | 'expand-detail';
+  onClick?: () => void;
   childrenBefore?: ReactNode;
+  sx?: SxProps<Theme>;
 }
 
 const RecipeCard: FunctionComponent<RecipeCardProps> = ({
@@ -51,41 +83,40 @@ const RecipeCard: FunctionComponent<RecipeCardProps> = ({
   time,
   difficulty,
   instructions,
+  onClick,
   childrenBefore,
   children,
+  sx,
 }: RecipeCardProps) => {
   const [expanded, setExpanded] = useState(false);
+
+  const headerProps = { name, time, difficulty, type, ingredients, children: childrenBefore };
 
   const handleExpandClick = useCallback(() => {
     setExpanded(!expanded);
   }, [expanded]);
 
   return (
-    <Card>
-      <CardContent>
-        {childrenBefore}
-        <Typography variant="h6">{name}</Typography>
-        <TimeAndDifficulty time={time} difficulty={difficulty} />
-        {type === 'simple' && (
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            {ingredients.map((ingredient) => (
-              <Chip key={ingredient} label={ingredient} />
-            ))}
-          </Box>
-        )}
-      </CardContent>
-      <CardActions disableSpacing>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
+    <Card sx={sx}>
+      {onClick ? (
+        <CardActionArea onClick={onClick}>
+          <RecipeCardHeader {...headerProps} />
+        </CardActionArea>
+      ) : (
+        <RecipeCardHeader {...headerProps} />
+      )}
       {type !== 'simple' && (
         <>
+          <CardActions disableSpacing>
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
+          </CardActions>
           <Divider />
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>

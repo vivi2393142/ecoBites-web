@@ -14,16 +14,20 @@ const TimeAndDifficulty: FunctionComponent<TimeAndDifficultyProps> = ({
   difficulty,
 }: TimeAndDifficultyProps) => {
   return (
-    <Box sx={{ display: 'flex', gap: 1 }}>
-      <Box>
-        <AccessTimeIcon />
-        <Typography variant="body2">{time} mins</Typography>
+    <Box sx={{ display: 'flex', gap: 0.25 }}>
+      <Box sx={{ display: 'flex', gap: 0.5 }}>
+        <AccessTimeIcon fontSize="small" />
+        <Typography variant="body2" noWrap>
+          {time} mins
+        </Typography>
       </Box>
       <Typography variant="body2">•</Typography>
-      <Box>
-        <AutoGraphIcon />
+      <Box sx={{ display: 'flex', gap: 0.5 }}>
+        <AutoGraphIcon fontSize="small" />
         {/* TODO: change level to cute image */}
-        <Typography variant="body2">{difficulty.toLocaleLowerCase()}</Typography>
+        <Typography variant="body2" noWrap>
+          {difficulty.toLocaleLowerCase()}
+        </Typography>
       </Box>
     </Box>
   );

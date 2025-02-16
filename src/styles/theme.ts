@@ -145,17 +145,38 @@ export const theme = createTheme({
         },
       },
     },
-    // MuiButtonBase: {
-    //   styleOverrides: {
-    //     root: {
-    //       '&.MuiTabScrollButton-root': {
-    //         width: 24,
-    //       },
-    //       '&.MuiTabScrollButton-root.Mui-disabled': {
-    //         opacity: 0.2,
-    //       },
-    //     },
-    //   },
-    // },
+    MuiSvgIcon: {
+      variants: [
+        {
+          props: {
+            fontSize: 'tiny',
+          },
+          style: {
+            fontSize: '0.75rem',
+          },
+        },
+      ],
+      styleOverrides: {
+        fontSizeSmall: {
+          fontSize: '1rem',
+        },
+      },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          '&:last-child': {
+            paddingBottom: 16,
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        labelSmall: {
+          fontSize: '0.75rem',
+        },
+      },
+    },
   },
 });
