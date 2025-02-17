@@ -185,5 +185,13 @@ export const theme = createTheme({
         },
       },
     },
+    MuiFab: {
+      styleOverrides: {
+        sizeSmall: {
+          width: 44,
+          height: 44,
+        },
+      },
+    },
   },
 });

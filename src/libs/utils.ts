@@ -53,7 +53,7 @@ export const mapEnumValues = <
   );
 };
 
-export const uploadPhotoFile = (): Promise<string> =>
+export const uploadPhotoFile = (): Promise<File> =>
   new Promise((resolve, reject) => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -74,18 +74,23 @@ export const uploadPhotoFile = (): Promise<string> =>
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result;
-        if (typeof result === 'string') {
-          resolve(result); // 回傳 Base64
-        } else {
-          reject(new Error('Failed to read file as Base64'));
-        }
-      };
-
-      reader.readAsDataURL(file); // 轉 Base64
+      resolve(file);
     };
 
     input.click();
+  });
+
+export const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result;
+      if (typeof result === 'string') {
+        resolve(result); // 回傳 Base64
+      } else {
+        reject(new Error('Failed to read file as Base64'));
+      }
+    };
+
+    reader.readAsDataURL(file); // 轉 Base64
   });

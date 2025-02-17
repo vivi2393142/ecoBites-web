@@ -39,12 +39,13 @@ export enum Difficulty {
 export interface Recipe {
   name: string;
   ingredients: string[];
-  time: number;
-  difficulty: Difficulty;
+  time: string;
+  difficulty: string;
   instructions: string[];
 }
 
 export interface CookHistory extends Recipe {
+  id: string;
   comment: string;
   img: string; // TODO: check type
   isDone: boolean;

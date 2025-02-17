@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { FunctionComponent, PropsWithChildren } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,6 @@ import { pageSettings } from 'libs/settings';
 import { uploadPhotoFile } from 'libs/utils';
 import { ReactComponent as AvatarIcon } from 'assets/icon/avatar.svg';
 import { useScanResultAtom } from 'stores/atoms/scanResult';
-import { mockRecipes } from 'libs/mockData';
 import { useSnackbarAtom } from 'stores/atoms/snackbar';
 
 const settings = [
@@ -46,18 +45,16 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
 
   const value = useMemo(() => location.pathname.substring(1).toUpperCase(), [location]);
 
-  const [, setUploadedPhoto] = useState<string | null>(null);
-
-  const { addScanResult } = useScanResultAtom();
+  const { addScanPhoto } = useScanResultAtom();
   const { showSnackbar } = useSnackbarAtom();
 
   const handleClickCamera = useCallback(() => {
     void (async () => {
       try {
-        const uploadedPhoto = await uploadPhotoFile();
-        setUploadedPhoto(uploadedPhoto);
+        const newPhoto = await uploadPhotoFile();
         // TODO: call api to get results
-        addScanResult({ recommendedRecipes: mockRecipes });
+        // addScanResult({ recommendedRecipes: mockRecipes });
+        addScanPhoto({ uploadedPhoto: newPhoto });
         showSnackbar({
           message: `You got a new ingredient card! Check 'Rewards' to see the details.`,
         });
@@ -66,14 +63,15 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
         console.error(error);
       }
     })();
-  }, [navigate, addScanResult, showSnackbar]);
+  }, [navigate, showSnackbar, addScanPhoto]);
 
   return (
     <Box
       sx={{
-        height: '100vh',
+        minHeight: '100dvh',
         display: 'flex',
         flexDirection: 'column',
+        overflow: 'hidden',
       }}
     >
       <Paper
@@ -109,12 +107,12 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
       <Container
         sx={{
           flex: 1,
-          overflow: 'auto',
+          overflow: 'scroll',
           display: 'flex',
           flexDirection: 'column',
           gap: 0.75,
           py: noPadding ? 0 : 2,
-          height: '100vh - 56px - 72px',
+          maxHeight: 'calc(100dvh - 56px - 64px)',
           ...(noPadding && { p: 0 }),
         }}
       >
@@ -124,14 +122,15 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
         <Fab
           color="primary"
           sx={(theme) => ({
-            position: 'absolute',
-            bottom: theme.spacing(3.5),
+            position: 'fixed',
+            bottom: theme.spacing(3),
             left: '50%',
             transform: 'translateX(-50%)',
             background: theme.palette.text.secondary,
             color: theme.palette.primary.contrastText,
           })}
           onClick={handleClickCamera}
+          size="small"
         >
           <CameraAltIcon />
           <Typography
@@ -165,10 +164,6 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
           ))}
         </BottomNavigation>
       </Paper>
-      {/* <div>
-        <h2>結果：</h2>
-        {uploadedPhoto && <img src={uploadedPhoto} alt="Captured" />}
-      </div> */}
     </Box>
   );
 };

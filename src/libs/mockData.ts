@@ -13,7 +13,7 @@ export const mockRecipes: Recipe[] = [
       'Garlic',
       'Ginger',
     ],
-    time: 20,
+    time: '20 (mins)',
     difficulty: Difficulty.EASY,
     instructions: [
       'Slice sausages and stir-fry until cooked through.',
@@ -31,7 +31,7 @@ export const mockRecipes: Recipe[] = [
       'Olive Oil',
       'Cheese (optional)',
     ],
-    time: 35,
+    time: '35 (mins)',
     difficulty: Difficulty.MEDIUM,
     instructions: [
       'Preheat oven to 375°F (190°C).',
@@ -51,7 +51,7 @@ export const mockRecipes: Recipe[] = [
       'Salt',
       'Pepper',
     ],
-    time: 25,
+    time: '25 (mins)',
     difficulty: Difficulty.MEDIUM,
     instructions: [
       'Chop Lettuce/Cabbage and Pak Choi and mix in a bowl.',
@@ -80,8 +80,9 @@ export const mockRewardIngredients = {
   [RewardIngredient.VEGETABLE]: 1,
 };
 
-export const mockCookHistory: Record<string, CookHistory> = {
-  '1': {
+export const mockCookHistory: CookHistory[] = [
+  {
+    id: '1',
     name: 'Sausage and Pak Choi Stir-Fry with Greek Yogurt Dressing',
     ingredients: [
       'British Pork Sausages',
@@ -93,7 +94,7 @@ export const mockCookHistory: Record<string, CookHistory> = {
       'Garlic',
       'Ginger',
     ],
-    time: 20,
+    time: '20 (mins)',
     difficulty: Difficulty.EASY,
     instructions: [
       'Slice sausages and stir-fry until cooked through.',
@@ -104,7 +105,8 @@ export const mockCookHistory: Record<string, CookHistory> = {
     img: '',
     isDone: false,
   },
-  '2': {
+  {
+    id: '2',
     name: 'Frittata with Sausage, Pepper and Spring Onion',
     ingredients: [
       'Eggs',
@@ -114,15 +116,15 @@ export const mockCookHistory: Record<string, CookHistory> = {
       'Olive Oil',
       'Cheese (optional)',
     ],
-    time: 35,
+    time: '35 (mins)',
     difficulty: Difficulty.MEDIUM,
     instructions: [
       'Preheat oven to 375°F (190°C).',
       'Slice sausages and peppers, chop spring onions. Cook sausages until browned, then add peppers and onions and cook until softened.',
       'Whisk eggs and pour over the sausage and vegetable mixture in an oven-safe skillet. Bake for 20-25 minutes, or until set.',
     ],
-    comment: '',
-    img: '',
+    comment: 'test comment',
+    img: 'https://storage.googleapis.com/eco-bites/fridge-pictures/6.jpeg',
     isDone: true,
   },
-};
+];

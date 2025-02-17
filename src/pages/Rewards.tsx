@@ -20,6 +20,8 @@ import { capitalize } from 'libs/utils';
 import { RewardIngredient, RewardCuisine } from 'libs/schema';
 import { mockRewardCuisines, mockRewardIngredients } from 'libs/mockData';
 import { useSnackbarAtom } from 'stores/atoms/snackbar';
+import { userId } from 'api/axiosClient';
+import { useAddCuisineCard, useReduceRewardCard } from 'api/rewards';
 
 import MainLayout from 'components/common/MainLayout';
 import RewardCard from 'components/RewardCard';
@@ -36,6 +38,9 @@ const Rewards: FunctionComponent = () => {
 
   const { showSnackbar } = useSnackbarAtom();
 
+  const reduceReward = useReduceRewardCard();
+  const addCuisineCard = useAddCuisineCard();
+
   const handleChange = useCallback((_: SyntheticEvent, newTab: RewardTab) => {
     setTab(newTab);
   }, []);
@@ -47,11 +52,43 @@ const Rewards: FunctionComponent = () => {
 
   const handleMix = useCallback(
     (cuisine: RewardCuisine) => {
-      // TODO: mix card
-      showSnackbar({ message: `You got a new cuisine card ${rewardCuisineLabel[cuisine]}!` });
+      addCuisineCard.mutate(
+        { userId, items: { [cuisine]: 1 } },
+        {
+          onSuccess: () => {
+            const neededItems: Partial<Record<RewardIngredient, number>> = {};
+            rewardRecipe[cuisine].ingredients.forEach((ingredient) => {
+              neededItems[ingredient] = 1;
+            });
+            reduceReward.mutate(
+              { userId, items: neededItems },
+              {
+                onSuccess: () => {
+                  showSnackbar({
+                    message: `You got a new cuisine card ${rewardCuisineLabel[cuisine]}!`,
+                    severity: 'success',
+                  });
+                },
+                onError: () => {
+                  showSnackbar({
+                    message: 'Fail to mix card, please try again.',
+                    severity: 'error',
+                  });
+                },
+              },
+            );
+          },
+          onError: () => {
+            showSnackbar({
+              message: 'Fail to mix card, please try again.',
+              severity: 'error',
+            });
+          },
+        },
+      );
       setTab(RewardTab.REWARDS);
     },
-    [showSnackbar],
+    [showSnackbar, addCuisineCard, reduceReward],
   );
 
   return (

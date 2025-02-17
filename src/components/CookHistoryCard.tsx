@@ -32,11 +32,11 @@ const CookHistoryCard: FunctionComponent<CookHistoryCardProps> = ({
     <Card sx={{ ...sx, position: 'relative' }}>
       <CardActionArea onClick={onClick}>
         {img ? (
-          <CardMedia sx={{ height: 140 }} image={img} title="" />
+          <CardMedia sx={{ height: 120 }} image={img} title="" />
         ) : (
           <Box
             sx={(theme) => ({
-              height: 140,
+              height: 120,
               backgroundColor: theme.palette.grey[300],
               display: 'flex',
               flexDirection: 'column',

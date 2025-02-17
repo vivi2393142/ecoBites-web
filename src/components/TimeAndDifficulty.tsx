@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import type { Recipe } from 'libs/schema';
+import { capitalize } from 'libs/utils';
 
 type TimeAndDifficultyProps = Pick<Recipe, 'time' | 'difficulty'>;
 
@@ -14,11 +15,11 @@ const TimeAndDifficulty: FunctionComponent<TimeAndDifficultyProps> = ({
   difficulty,
 }: TimeAndDifficultyProps) => {
   return (
-    <Box sx={{ display: 'flex', gap: 0.25 }}>
+    <Box sx={{ display: 'flex', gap: 0.5 }}>
       <Box sx={{ display: 'flex', gap: 0.5 }}>
         <AccessTimeIcon fontSize="small" />
         <Typography variant="body2" noWrap>
-          {time} mins
+          {time}
         </Typography>
       </Box>
       <Typography variant="body2">•</Typography>
@@ -26,7 +27,7 @@ const TimeAndDifficulty: FunctionComponent<TimeAndDifficultyProps> = ({
         <AutoGraphIcon fontSize="small" />
         {/* TODO: change level to cute image */}
         <Typography variant="body2" noWrap>
-          {difficulty.toLocaleLowerCase()}
+          {capitalize(difficulty)}
         </Typography>
       </Box>
     </Box>

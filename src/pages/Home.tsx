@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FunctionComponent } from 'react';
+import { useCallback, type FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -8,12 +8,14 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Typography from '@mui/material/Typography';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
-import { mockCookHistory, mockRecipes } from 'libs/mockData';
 import { useScanResultAtom } from 'stores/atoms/scanResult';
 import { pageSettings } from 'libs/settings';
 import { Page, Recipe } from 'libs/schema';
 import { uploadPhotoFile } from 'libs/utils';
 import { useSnackbarAtom } from 'stores/atoms/snackbar';
+import { useRandomRecommendedRecipes } from 'api/recipes';
+import { usePosts } from 'api/posts';
+import { userId } from 'api/axiosClient';
 
 import MainLayout from 'components/common/MainLayout';
 import RecipeCard from 'components/RecipeCard';
@@ -22,18 +24,21 @@ import CookHistoryCard from 'components/CookHistoryCard';
 const Home: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const [uploadedPhoto, setUploadedPhoto] = useState<string | null>(null);
-
-  const { addScanResult } = useScanResultAtom();
+  const { addScanPhoto } = useScanResultAtom();
   const { showSnackbar } = useSnackbarAtom();
+
+  const { data: randomRecipesData } = useRandomRecommendedRecipes({
+    amount: 3,
+  });
+  const { data: postsData } = usePosts({ userId });
 
   const handleClickScan = useCallback(() => {
     void (async () => {
       try {
         const newPhoto = await uploadPhotoFile();
-        setUploadedPhoto(newPhoto);
         // TODO: call api to get results
-        addScanResult({ recommendedRecipes: mockRecipes });
+        // addScanResult({ recommendedRecipes: mockRecipes });
+        addScanPhoto({ uploadedPhoto: newPhoto });
         showSnackbar({
           message: `You got a new ingredient card! Check 'Rewards' to see the details.`,
         });
@@ -42,12 +47,7 @@ const Home: FunctionComponent = () => {
         console.error(error);
       }
     })();
-  }, [navigate, addScanResult, showSnackbar]);
-
-  // TODO: remove this
-  useEffect(() => {
-    console.log({ uploadedPhoto });
-  }, [uploadedPhoto]);
+  }, [navigate, showSnackbar, addScanPhoto]);
 
   const handleToNewCook = (recipe: Recipe) => {
     console.log({ recipe });
@@ -68,9 +68,12 @@ const Home: FunctionComponent = () => {
           background: theme.palette.primary.main,
           color: theme.palette.primary.contrastText,
           flexGrow: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         })}
       >
-        <CardActionArea onClick={handleClickScan} sx={{ height: '100%' }}>
+        <CardActionArea onClick={handleClickScan}>
           <CardContent
             sx={(theme) => ({
               display: 'flex',
@@ -92,17 +95,11 @@ const Home: FunctionComponent = () => {
           </CardContent>
         </CardActionArea>
       </Card>
-      {/* {imageSrc && (
-        <div>
-          <h2>結果：</h2>
-          <img src={imageSrc} alt="Captured" />
-        </div>
-      )} */}
       <Typography variant="h5" sx={{ mt: 0.75 }}>{`Today's Suggestions`}</Typography>
       <Box
         sx={{ display: 'flex', gap: 1, flexShrink: 0, overflowX: 'auto', scrollbarWidth: 'none' }}
       >
-        {mockRecipes.map((recipe, idx) => (
+        {randomRecipesData?.recommendedRecipes.map((recipe, idx) => (
           <RecipeCard
             // eslint-disable-next-line react/no-array-index-key
             key={idx}
@@ -121,13 +118,13 @@ const Home: FunctionComponent = () => {
       <Box
         sx={{ display: 'flex', gap: 1, flexShrink: 0, overflowX: 'auto', scrollbarWidth: 'none' }}
       >
-        {Object.entries(mockCookHistory).map(([id, recipe]) => (
+        {postsData?.posts.map((post) => (
           <CookHistoryCard
-            key={id}
-            {...recipe}
+            key={post.id}
+            {...post}
             sx={{ flexShrink: 0, width: 275 }}
             onClick={() => {
-              handleToHistoryCook(id);
+              handleToHistoryCook(post.id);
             }}
           />
         ))}

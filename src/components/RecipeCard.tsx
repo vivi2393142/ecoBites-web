@@ -55,7 +55,7 @@ const RecipeCardHeader: FunctionComponent<RecipeCardHeaderProps> = ({
   ingredients,
   children,
 }) => (
-  <CardContent sx={type === 'expand-detail' ? { p: 0 } : {}}>
+  <CardContent sx={type === 'expand-detail' ? { p: 0, width: '100%' } : {}}>
     {children}
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       <Typography variant={type !== 'simple' ? 'h6' : 'subtitle2'}>{name}</Typography>
@@ -81,7 +81,9 @@ const RecipeSteps: FunctionComponent<RecipeStepsProps> = ({
 }: RecipeStepsProps) => (
   <CardContent
     sx={
-      type === 'expand-detail' ? { p: 0, display: 'flex', flexDirection: 'column', gap: 0.75 } : {}
+      type === 'expand-detail'
+        ? { p: 0, display: 'flex', flexDirection: 'column', gap: 0.75 }
+        : { display: 'flex', flexDirection: 'column', gap: 0.75 }
     }
   >
     <Typography variant="h6" sx={{ mt: 0.75 }}>
@@ -97,7 +99,9 @@ const RecipeSteps: FunctionComponent<RecipeStepsProps> = ({
         </ListItem>
       ))}
     </List>
-    <Typography variant="h6">Steps</Typography>
+    <Typography variant="h6" sx={{ mt: 0.75 }}>
+      Steps
+    </Typography>
     <List sx={{ p: 0 }}>
       {instructions.map((step, idx) => (
         <ListItem

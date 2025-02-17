@@ -1,5 +1,10 @@
-// TODO: test api
-export const GET_ROLES = '/get_roles/';
-export const CREATE_ROLE = '/create_role/';
-export const UPDATE_ROLE = '/update_role/';
-export const DELETE_ROLE = '/delete_role/';
+export const GET_RECIPES_FROM_PHOTO = '/recipes/fridge';
+export const GET_RANDOM_RECIPES_FROM_PHOTO = '/recipes/random/suggestion';
+
+export const POSTS = '/posts';
+export const FINISH_POST = '/posts/finish';
+export const UPLOAD_IMAGE = '/posts/upload-image';
+
+export const REWARDS = '/rewards';
+export const REDUCE_REWARDS = '/rewards/reduce';
+export const ADD_CUISINE_REWARD = '/rewards/ingredient';
