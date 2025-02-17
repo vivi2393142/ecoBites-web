@@ -18,10 +18,9 @@ import {
 
 import { capitalize } from 'libs/utils';
 import { RewardIngredient, RewardCuisine } from 'libs/schema';
-import { mockRewardCuisines, mockRewardIngredients } from 'libs/mockData';
 import { useSnackbarAtom } from 'stores/atoms/snackbar';
+import { useAddCuisineCard, useReduceRewardCard, useUserRewards } from 'api/rewards';
 import { userId } from 'api/axiosClient';
-import { useAddCuisineCard, useReduceRewardCard } from 'api/rewards';
 
 import MainLayout from 'components/common/MainLayout';
 import RewardCard from 'components/RewardCard';
@@ -32,7 +31,6 @@ enum RewardTab {
   MIX = 'MIX',
 }
 
-// TODO: finish rewards page
 const Rewards: FunctionComponent = () => {
   const [tab, setTab] = useState<RewardTab>(RewardTab.REWARDS);
 
@@ -40,14 +38,15 @@ const Rewards: FunctionComponent = () => {
 
   const reduceReward = useReduceRewardCard();
   const addCuisineCard = useAddCuisineCard();
+  const { data: rewardsData, refetch: refetchRewards } = useUserRewards({ userId });
 
   const handleChange = useCallback((_: SyntheticEvent, newTab: RewardTab) => {
     setTab(newTab);
   }, []);
 
   const lackCuisines = useMemo(
-    () => Object.values(RewardCuisine).filter((cuisine) => !mockRewardCuisines[cuisine]),
-    [],
+    () => Object.values(RewardCuisine).filter((cuisine) => !rewardsData?.cuisineCards?.[cuisine]),
+    [rewardsData?.cuisineCards],
   );
 
   const handleMix = useCallback(
@@ -64,6 +63,7 @@ const Rewards: FunctionComponent = () => {
               { userId, items: neededItems },
               {
                 onSuccess: () => {
+                  void refetchRewards();
                   showSnackbar({
                     message: `You got a new cuisine card ${rewardCuisineLabel[cuisine]}!`,
                     severity: 'success',
@@ -88,7 +88,7 @@ const Rewards: FunctionComponent = () => {
       );
       setTab(RewardTab.REWARDS);
     },
-    [showSnackbar, addCuisineCard, reduceReward],
+    [showSnackbar, refetchRewards, addCuisineCard, reduceReward],
   );
 
   return (
@@ -113,12 +113,14 @@ const Rewards: FunctionComponent = () => {
                   key={type}
                   md={3}
                   xs={4}
-                  order={Object.values(RewardCuisine).length - (mockRewardCuisines?.[type] || 0)}
+                  order={
+                    Object.values(RewardCuisine).length - (rewardsData?.cuisineCards?.[type] || 0)
+                  }
                 >
                   <RewardCard
                     label={rewardCuisineLabel[type]}
                     src={cuisineToImage[type]}
-                    ctn={mockRewardCuisines?.[type] || 0}
+                    ctn={rewardsData?.cuisineCards?.[type] || 0}
                   />
                 </Grid>
               ))}
@@ -133,13 +135,14 @@ const Rewards: FunctionComponent = () => {
                   md={3}
                   xs={4}
                   order={
-                    Object.values(RewardIngredient).length - (mockRewardIngredients?.[type] || 0)
+                    Object.values(RewardIngredient).length -
+                    (rewardsData?.ingredientCards?.[type] || 0)
                   }
                 >
                   <RewardCard
                     label={rewardIngredientLabel[type]}
                     src={ingredientToImage[type]}
-                    ctn={mockRewardIngredients?.[type] || 0}
+                    ctn={rewardsData?.ingredientCards?.[type] || 0}
                   />
                 </Grid>
               ))}
@@ -155,8 +158,7 @@ const Rewards: FunctionComponent = () => {
                 style={rewardRecipe[cuisine].style}
                 ingredients={rewardRecipe[cuisine].ingredients}
                 img={cuisineToImage[cuisine]}
-                // TODO: get from api
-                ownIngredients={mockRewardIngredients}
+                ownIngredients={rewardsData?.ingredientCards || {}}
                 onMix={handleMix}
               />
             ))}

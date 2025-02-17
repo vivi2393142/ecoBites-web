@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Skeleton from '@mui/material/Skeleton';
 import CardContent from '@mui/material/CardContent';
 import CardActionArea from '@mui/material/CardActionArea';
 import Typography from '@mui/material/Typography';
@@ -14,7 +15,7 @@ import { Page, Recipe } from 'libs/schema';
 import { uploadPhotoFile } from 'libs/utils';
 import { useSnackbarAtom } from 'stores/atoms/snackbar';
 import { useRandomRecommendedRecipes } from 'api/recipes';
-import { usePosts } from 'api/posts';
+import { useCreatePost, usePosts } from 'api/posts';
 import { userId } from 'api/axiosClient';
 
 import MainLayout from 'components/common/MainLayout';
@@ -26,6 +27,7 @@ const Home: FunctionComponent = () => {
 
   const { addScanPhoto } = useScanResultAtom();
   const { showSnackbar } = useSnackbarAtom();
+  const createPost = useCreatePost();
 
   const { data: randomRecipesData } = useRandomRecommendedRecipes({
     amount: 3,
@@ -36,25 +38,29 @@ const Home: FunctionComponent = () => {
     void (async () => {
       try {
         const newPhoto = await uploadPhotoFile();
-        // TODO: call api to get results
-        // addScanResult({ recommendedRecipes: mockRecipes });
         addScanPhoto({ uploadedPhoto: newPhoto });
-        showSnackbar({
-          message: `You got a new ingredient card! Check REWARDS to see the details.`,
-        });
         navigate(pageSettings[Page.SCAN].route);
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [navigate, showSnackbar, addScanPhoto]);
+  }, [navigate, addScanPhoto]);
 
   const handleToNewCook = (recipe: Recipe) => {
-    console.log({ recipe });
-    // TODO
-    // 1. call api to save starting recipe
-    // 2. navigate to return id
-    navigate(`${pageSettings[Page.COOKING].route}?cuisine=${1}`);
+    createPost.mutate(
+      {
+        userId,
+        recipe,
+      },
+      {
+        onSuccess: (response) => {
+          navigate(`${pageSettings[Page.COOKING].route}?cuisine=${response.postId}`);
+        },
+        onError: () => {
+          showSnackbar({ message: 'Fail to start cooking, please try again.', severity: 'error' });
+        },
+      },
+    );
   };
 
   const handleToHistoryCook = (cuisineId: string) => {
@@ -98,18 +104,29 @@ const Home: FunctionComponent = () => {
       <Box
         sx={{ display: 'flex', gap: 1, flexShrink: 0, overflowX: 'auto', scrollbarWidth: 'none' }}
       >
-        {randomRecipesData?.recommendedRecipes.map((recipe, idx) => (
-          <RecipeCard
-            // eslint-disable-next-line react/no-array-index-key
-            key={idx}
-            type="simple"
-            {...recipe}
-            sx={{ flexShrink: 0, width: 250 }}
-            onClick={() => {
-              handleToNewCook(recipe);
-            }}
-          />
-        ))}
+        {randomRecipesData?.recommendedRecipes
+          ? randomRecipesData.recommendedRecipes.map((recipe, idx) => (
+              <RecipeCard
+                // eslint-disable-next-line react/no-array-index-key
+                key={idx}
+                type="simple"
+                {...recipe}
+                sx={{ flexShrink: 0, width: 250 }}
+                onClick={() => {
+                  handleToNewCook(recipe);
+                }}
+              />
+            ))
+          : Array.from({ length: 4 }, (_, idx) => (
+              <Skeleton
+                // eslint-disable-next-line react/no-array-index-key
+                key={idx}
+                variant="rounded"
+                width={250}
+                height={122.75}
+                sx={{ flexShrink: 0 }}
+              />
+            ))}
       </Box>
       <Typography variant="h5" sx={{ mt: 0.75 }}>
         Your Cuisines
@@ -117,16 +134,27 @@ const Home: FunctionComponent = () => {
       <Box
         sx={{ display: 'flex', gap: 1, flexShrink: 0, overflowX: 'auto', scrollbarWidth: 'none' }}
       >
-        {postsData?.posts.map((post) => (
-          <CookHistoryCard
-            key={post.id}
-            {...post}
-            sx={{ flexShrink: 0, width: 275 }}
-            onClick={() => {
-              handleToHistoryCook(post.id);
-            }}
-          />
-        ))}
+        {postsData?.posts
+          ? postsData?.posts.map((post) => (
+              <CookHistoryCard
+                key={post.id}
+                {...post}
+                sx={{ flexShrink: 0, width: 275 }}
+                onClick={() => {
+                  handleToHistoryCook(post.id);
+                }}
+              />
+            ))
+          : Array.from({ length: 4 }, (_, idx) => (
+              <Skeleton
+                // eslint-disable-next-line react/no-array-index-key
+                key={idx}
+                variant="rounded"
+                width={275}
+                height={120}
+                sx={{ flexShrink: 0 }}
+              />
+            ))}
       </Box>
     </MainLayout>
   );

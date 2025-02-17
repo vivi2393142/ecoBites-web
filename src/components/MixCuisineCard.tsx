@@ -36,7 +36,7 @@ interface MixCuisineCardProps {
   style: string;
   ingredients: RewardIngredient[];
   img: string;
-  ownIngredients: Record<RewardIngredient, number>;
+  ownIngredients: Partial<Record<RewardIngredient, number>>;
   onMix: (cuisine: RewardCuisine) => void;
 }
 
@@ -56,7 +56,7 @@ const MixCuisineCard: FunctionComponent<MixCuisineCardProps> = ({
 
   const isMakeable = useMemo(() => {
     const neededIngredients = rewardRecipe[cuisine].ingredients;
-    return neededIngredients.every((ingredient) => ownIngredients?.[ingredient] > 0);
+    return neededIngredients.every((ingredient) => (ownIngredients?.[ingredient] || 0) > 0);
   }, [cuisine, ownIngredients]);
 
   const handleMix = useCallback(() => {

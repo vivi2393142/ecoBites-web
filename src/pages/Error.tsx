@@ -1,6 +1,5 @@
 import type { FunctionComponent } from 'react';
 
-// TODO: finish error page
 const Error: FunctionComponent = () => {
   return (
     <div id="error-page">

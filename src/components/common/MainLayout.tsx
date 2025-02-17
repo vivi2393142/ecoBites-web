@@ -21,7 +21,6 @@ import { pageSettings } from 'libs/settings';
 import { uploadPhotoFile } from 'libs/utils';
 import { ReactComponent as AvatarIcon } from 'assets/icon/avatar.svg';
 import { useScanResultAtom } from 'stores/atoms/scanResult';
-import { useSnackbarAtom } from 'stores/atoms/snackbar';
 
 const settings = [
   {
@@ -46,24 +45,18 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
   const value = useMemo(() => location.pathname.substring(1).toUpperCase(), [location]);
 
   const { addScanPhoto } = useScanResultAtom();
-  const { showSnackbar } = useSnackbarAtom();
 
   const handleClickCamera = useCallback(() => {
     void (async () => {
       try {
         const newPhoto = await uploadPhotoFile();
-        // TODO: call api to get results
-        // addScanResult({ recommendedRecipes: mockRecipes });
         addScanPhoto({ uploadedPhoto: newPhoto });
-        showSnackbar({
-          message: `You got a new ingredient card! Check REWARDS to see the details.`,
-        });
         navigate(pageSettings[Page.SCAN].route);
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [navigate, showSnackbar, addScanPhoto]);
+  }, [navigate, addScanPhoto]);
 
   return (
     <Box

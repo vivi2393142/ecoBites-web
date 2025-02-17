@@ -47,6 +47,6 @@ export interface Recipe {
 export interface CookHistory extends Recipe {
   id: string;
   comment: string;
-  img: string; // TODO: check type
+  img: string;
   isDone: boolean;
 }

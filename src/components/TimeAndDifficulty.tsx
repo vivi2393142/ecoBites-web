@@ -19,13 +19,12 @@ const TimeAndDifficulty: FunctionComponent<TimeAndDifficultyProps> = ({
       <Box sx={{ display: 'flex', gap: 0.5 }}>
         <AccessTimeIcon fontSize="small" />
         <Typography variant="body2" noWrap>
-          {time}
+          {time} mins
         </Typography>
       </Box>
       <Typography variant="body2">•</Typography>
       <Box sx={{ display: 'flex', gap: 0.5 }}>
         <AutoGraphIcon fontSize="small" />
-        {/* TODO: change level to cute image */}
         <Typography variant="body2" noWrap>
           {capitalize(difficulty)}
         </Typography>

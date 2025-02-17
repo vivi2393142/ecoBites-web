@@ -4,41 +4,61 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
+import Skeleton from '@mui/material/Skeleton';
 
 import { Page, Recipe } from 'libs/schema';
 import { pageSettings } from 'libs/settings';
 import { useScanResultAtom } from 'stores/atoms/scanResult';
-import { useRecommendedRecipes } from 'api/recipes';
+import { useRandomRecommendedRecipes } from 'api/recipes';
 import { fileToBase64 } from 'libs/utils';
 import { useCreatePost } from 'api/posts';
+import { useSnackbarAtom } from 'stores/atoms/snackbar';
 import { userId } from 'api/axiosClient';
+import { useReward } from 'api/rewards';
 
 import MainLayout from 'components/common/MainLayout';
 import RecipeCard from 'components/RecipeCard';
-import { useSnackbarAtom } from 'stores/atoms/snackbar';
 
-// TODO: finish Scan page
 const Scan: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const { scanResult, addScanResult } = useScanResultAtom();
   const { showSnackbar } = useSnackbarAtom();
 
-  const { data, isLoading } = useRecommendedRecipes(
-    {
-      image: scanResult.uploadedPhoto as File,
-      amount: '3',
-    },
-    { enabled: !!(scanResult.uploadedPhoto && !scanResult.recommendedRecipes) },
-  );
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const [isGetRecommend, setIsGetRecommend] = useState(false);
+
+  // const { data, isLoading } = useRecommendedRecipes(
+  //   {
+  //     image: scanResult.uploadedPhoto as File,
+  //     amount: '3',
+  //   },
+  //   { enabled: !!(scanResult.uploadedPhoto && !scanResult.recommendedRecipes) },
+  // );
+  // TODO: change to useRecommendedRecipes
+  const { data, isLoading } = useRandomRecommendedRecipes({
+    amount: 3,
+  });
+  const { data: rewardData } = useReward({ userId, amount: 1 }, { enabled: isGetRecommend });
   const createPost = useCreatePost();
 
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  useEffect(() => {
+    if (data) {
+      setIsGetRecommend(true);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (rewardData?.cards) {
+      showSnackbar({
+        severity: 'success',
+        message: 'You got 1 ingredient, check it at REWARDS.',
+      });
+    }
+  }, [rewardData?.cards, showSnackbar]);
 
   const handleMakeCuisine = useCallback(
     (recipe: Recipe) => {
-      // TODO: call api to start cooking this cuisine
       createPost.mutate(
         {
           userId,
@@ -69,7 +89,6 @@ const Scan: FunctionComponent = () => {
     })();
   }, [scanResult.uploadedPhoto]);
 
-  // TODO: remove
   useEffect(() => {
     if (data) addScanResult({ recommendedRecipes: data.recommendedRecipes });
   }, [data, addScanResult]);
@@ -77,8 +96,6 @@ const Scan: FunctionComponent = () => {
   return (
     <MainLayout>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
-        {/* TODO: handle loading */}
-        {isLoading ? <CircularProgress /> : null}
         <Typography variant="h5" sx={{ mt: 0.75 }}>
           Your Photo
         </Typography>
@@ -96,7 +113,7 @@ const Scan: FunctionComponent = () => {
         <Typography variant="h5" sx={{ mt: 0.75 }}>
           Suggestions
         </Typography>
-        {!isLoading && (
+        {!isLoading ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             {scanResult.recommendedRecipes?.map((recipe, idx) => (
               // eslint-disable-next-line react/no-array-index-key
@@ -113,6 +130,16 @@ const Scan: FunctionComponent = () => {
               </RecipeCard>
             ))}
           </Box>
+        ) : (
+          Array.from({ length: 3 }, (_, idx) => (
+            <Skeleton
+              // eslint-disable-next-line react/no-array-index-key
+              key={idx}
+              variant="rounded"
+              width={250}
+              height={122.75}
+            />
+          ))
         )}
       </Box>
     </MainLayout>

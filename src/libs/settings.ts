@@ -17,7 +17,6 @@ import vegetableImg from '../assets/img/vegetable.png';
 export const pageSettings: Record<Page, PageSetting> = {
   [Page.HOME]: {
     route: '/home',
-    // TODO: get label, icon, enable from API
     label: 'Home',
   },
   [Page.REWARDS]: {

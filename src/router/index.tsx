@@ -5,7 +5,6 @@ import Error from 'pages/Error';
 import HomePage from 'pages/Home';
 import RewardsPage from 'pages/Rewards';
 import ScanPage from 'pages/Scan';
-import ThemeDemo from 'pages/ThemeDemo';
 
 import { Page } from 'libs/schema';
 import { pageSettings } from 'libs/settings';
@@ -35,11 +34,6 @@ const router = createBrowserRouter(
     {
       path: '*',
       element: <Navigate to={pageSettings[Page.HOME].route} replace />,
-    },
-    {
-      // TODO: temp use for theme components demo, remove when theme get steady
-      path: '/theme-demo',
-      element: <ThemeDemo />,
     },
   ],
   {

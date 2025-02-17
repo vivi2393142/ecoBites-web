@@ -2,7 +2,6 @@ import { createTheme } from '@mui/material/styles';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 
-// TODO: adjust theme
 export const theme = createTheme({
   palette: {
     primary: {

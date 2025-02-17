@@ -7,4 +7,6 @@ export const UPLOAD_IMAGE = '/posts/upload-image';
 
 export const REWARDS = '/rewards';
 export const REDUCE_REWARDS = '/rewards/reduce';
-export const ADD_CUISINE_REWARD = '/rewards/ingredient';
+export const ADD_CUISINE_REWARD = '/reward/ingredient';
+
+export const USER_REWARDS = '/users';

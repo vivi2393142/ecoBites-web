@@ -11,7 +11,6 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
   paddingLeft: theme.spacing(6),
 }));
 
-// TODO: adjust snackbar
 const Snackbar: FunctionComponent = () => {
   const {
     snackbar: { open, message, severity },

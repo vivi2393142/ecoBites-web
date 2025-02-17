@@ -1,7 +1,15 @@
-import { ChangeEvent, useCallback, useEffect, useState, type FunctionComponent } from 'react';
+import {
+  ChangeEvent,
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useState,
+  type FunctionComponent,
+} from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
+import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
@@ -15,13 +23,41 @@ import { Page, RewardIngredient } from 'libs/schema';
 import { ingredientToImage, pageSettings } from 'libs/settings';
 import { capitalize, uploadPhotoFile } from 'libs/utils';
 import congratulationImg from 'assets/img/congratulation.png';
-import { useFinishPost, usePost, useUpdatePost, useUploadImage } from 'api/posts';
+import { usePost, useUpdatePost, useUploadImage } from 'api/posts';
 import { userId } from 'api/axiosClient';
 import { useSnackbarAtom } from 'stores/atoms/snackbar';
 import { useReward } from 'api/rewards';
 
 import MainLayout from 'components/common/MainLayout';
 import RecipeCard from 'components/RecipeCard';
+
+interface ImageWithSkeletonProps {
+  src: string;
+  alt: string;
+  style: CSSProperties;
+  skeleton: {
+    width: number | string;
+    height: number | string;
+  };
+}
+
+const ImageWithSkeleton: FunctionComponent<ImageWithSkeletonProps> = ({
+  src,
+  alt,
+  style,
+  skeleton: { width, height },
+}: ImageWithSkeletonProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <Box position="relative">
+      {isLoading && (
+        <Skeleton variant="rectangular" width={width} height={height} animation="wave" />
+      )}
+      <img src={src} style={style} alt={alt} onLoad={() => setIsLoading(false)} />
+    </Box>
+  );
+};
 
 interface EarnedCardProps {
   ingredient: RewardIngredient;
@@ -92,7 +128,6 @@ const EarnedReward: FunctionComponent<EarnedRewardProps> = ({ ingredients, onBac
   );
 };
 
-// TODO: redesign Cooking page
 const Cooking: FunctionComponent = () => {
   const navigate = useNavigate();
 
@@ -112,10 +147,10 @@ const Cooking: FunctionComponent = () => {
     },
   );
   const updatePost = useUpdatePost();
-  const finishPost = useFinishPost();
   const uploadImage = useUploadImage();
   const { data: rewardData } = useReward(
     {
+      userId,
       amount: 3,
     },
     { enabled: isSubmitted },
@@ -126,13 +161,17 @@ const Cooking: FunctionComponent = () => {
   }, [navigate]);
 
   const handleComplete = useCallback(() => {
-    // TODO: handle complete
-    // TODO: handle get reward and call api
     if (!cuisineId) return;
-    finishPost.mutate(
-      { postId: cuisineId, userId },
+    updatePost.mutate(
+      {
+        postId: cuisineId,
+        recipeImgUrl: uploadedPhotoUrl || '',
+        review: reviewValue,
+        isSubmitted: true,
+      },
       {
         onSuccess: () => {
+          void refetchPost();
           setIsSubmitted(true);
         },
         onError: () => {
@@ -140,8 +179,7 @@ const Cooking: FunctionComponent = () => {
         },
       },
     );
-    // setEarnedCards([RewardIngredient.VEGETABLE, RewardIngredient.EGG]);
-  }, [cuisineId, finishPost, showSnackbar]);
+  }, [cuisineId, updatePost, refetchPost, showSnackbar, reviewValue, uploadedPhotoUrl]);
 
   const handleSave = useCallback(() => {
     if (!cuisineId) return;
@@ -153,6 +191,7 @@ const Cooking: FunctionComponent = () => {
       },
       {
         onSuccess: () => {
+          void refetchPost();
           showSnackbar({ message: 'Save successfully!', severity: 'success' });
         },
         onError: () => {
@@ -160,7 +199,7 @@ const Cooking: FunctionComponent = () => {
         },
       },
     );
-  }, [showSnackbar, cuisineId, uploadedPhotoUrl, reviewValue, updatePost]);
+  }, [showSnackbar, refetchPost, cuisineId, uploadedPhotoUrl, reviewValue, updatePost]);
 
   const handleUploadPhoto = useCallback(() => {
     void (async () => {
@@ -177,7 +216,6 @@ const Cooking: FunctionComponent = () => {
             },
           },
         );
-        // TODO: call api to upload photo
       } catch (error) {
         console.error(error);
       }
@@ -194,8 +232,8 @@ const Cooking: FunctionComponent = () => {
   }, [refetchPost]);
 
   useEffect(() => {
-    setReviewValue(postData?.post.comment || '');
-    setUploadedPhotoUrl(postData?.post.img || null);
+    setReviewValue(postData?.post?.comment || '');
+    setUploadedPhotoUrl(postData?.post?.img || null);
   }, [postData?.post]);
 
   return (
@@ -210,7 +248,12 @@ const Cooking: FunctionComponent = () => {
           childrenBefore={
             postData.post.isDone &&
             (postData.post?.img ? (
-              <img src={postData.post.img} alt="Captured" style={{ width: '100%' }} />
+              <ImageWithSkeleton
+                src={postData.post.img}
+                alt="Captured"
+                style={{ width: '100%' }}
+                skeleton={{ width: '100%', height: 150 }}
+              />
             ) : (
               <Box
                 sx={(theme) => ({
@@ -293,7 +336,7 @@ const Cooking: FunctionComponent = () => {
       ) : null}
       {!isSubmitted && !postData?.post ? (
         <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h6">No recipe found</Typography>
+          <Skeleton variant="rectangular" width="100%" height={200} />
           <Button variant="contained" onClick={handleBackHome}>
             Back to Home
           </Button>

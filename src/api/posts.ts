@@ -5,32 +5,31 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-// import * as path from 'api/path';
-// import axiosClient from 'api/axiosClient';
+import * as path from 'api/path';
+import axiosClient from 'api/axiosClient';
 import { CookHistory, Recipe } from 'libs/schema';
-import { mockCookHistory } from 'libs/mockData';
 
 /** getPostsByUserId */
-// interface OriginGetPostsResponse {
-//   status: string;
-//   data: {
-//     posts: {
-//       id: string;
-//       recipe_img: string | null;
-//       user_id: string;
-//       review: string | null;
-//       type: 'draft';
-//       recipe: {
-//         recipe: string;
-//         required_ingredients: string[];
-//         instructions: string[];
-//         addtional_ingredients_to_purchase: string[];
-//         suggestion_time: string;
-//         difficulty: string;
-//       };
-//     }[];
-//   };
-// }
+interface OriginGetPostsResponse {
+  status: string;
+  data: {
+    posts: {
+      id: string;
+      recipe_img: string | null;
+      user_id: string;
+      review: string | null;
+      type: 'draft';
+      recipe: {
+        recipe: string;
+        required_ingredients: string[];
+        instructions: string[];
+        addtional_ingredients_to_purchase: string[];
+        suggestion_time: string;
+        difficulty: string;
+      };
+    }[];
+  };
+}
 
 interface GetPostsResponse {
   posts: CookHistory[];
@@ -47,30 +46,32 @@ export const usePosts = (
     queryKey: ['getPosts'],
     queryFn: async () => {
       console.log('call getPosts', { userId });
+      const { data: result } = await axiosClient.get<OriginGetPostsResponse>(
+        `${path.POSTS}?userId=${userId}`,
+      );
 
-      // TODO: check api after cors
-      // const { data: result } = await axiosClient.get<OriginGetPostsResponse>(
-      //   `${path.POSTS}?userId=${userId}`,
-      // );
+      console.log('56', { result });
 
-      // if (result.status === 'ok')
-      //   return {
-      //     posts: result.data.posts.map((p) => ({
-      //       id: p.id,
-      //       comment: p.review || '',
-      //       img: p.recipe_img || '', // TODO: check type
-      //       isDone: p.type !== 'draft',
-      //       name: p.recipe.recipe,
-      //       ingredients: p.recipe.required_ingredients,
-      //       time: p.recipe.suggestion_time, // TODO: check with (mins) or not
-      //       difficulty: p.recipe.difficulty,
-      //       instructions: p.recipe.instructions,
-      //     })),
-      //   };
+      if (result.status === 'ok') {
+        return {
+          posts: result.data.posts.map((p) => ({
+            id: p.id,
+            comment: p.review || '',
+            img: p.recipe_img || '',
+            isDone: p.type !== 'draft',
+            name: p.recipe.recipe,
+            ingredients: p.recipe.required_ingredients,
+            time: p.recipe.suggestion_time,
+            difficulty: p.recipe.difficulty,
+            instructions: p.recipe.instructions,
+          })),
+        };
+      }
 
-      return { posts: mockCookHistory };
+      return { posts: [] };
     },
     ...options,
+    refetchOnMount: true,
   });
 
 /** createPostByUserId */
@@ -79,24 +80,24 @@ interface CreatePostPayload {
   recipe: Recipe;
 }
 
-// interface OriginCreatePostPayload {
-//   userId: string;
-//   recipe: {
-//     recipe: string;
-//     required_ingredients: string[];
-//     instructions: string[];
-//     addtional_ingredients_to_purchase: string[];
-//     suggestion_time: string;
-//     difficulty: string;
-//   };
-// }
+interface OriginCreatePostPayload {
+  userId: string;
+  recipe: {
+    recipe: string;
+    required_ingredients: string[];
+    instructions: string[];
+    addtional_ingredients_to_purchase: string[];
+    suggestion_time: string;
+    difficulty: string;
+  };
+}
 
-// interface OriginCreatePostResponse {
-//   status: string;
-//   data: {
-//     postId: string;
-//   };
-// }
+interface OriginCreatePostResponse {
+  status: string;
+  data: {
+    postId: string;
+  };
+}
 
 interface CreatePostResponse {
   postId: string;
@@ -111,74 +112,71 @@ export const useCreatePost = (
   useMutation({
     mutationFn: async (payload: CreatePostPayload) => {
       console.log('call createPost', { payload });
-      // TODO: finish api
-      // const originPayload: OriginCreatePostPayload = {
-      //   userId: payload.userId,
-      //   recipe: {
-      //     recipe: payload.recipe.name,
-      //     required_ingredients: payload.recipe.ingredients,
-      //     instructions: payload.recipe.instructions,
-      //     addtional_ingredients_to_purchase: [],
-      //     suggestion_time: payload.recipe.time,
-      //     difficulty: payload.recipe.difficulty,
-      //   },
-      // };
-      // // eslint-disable-next-line  @typescript-eslint/no-unsafe-argument
-      // const { data } = await axiosClient.post<OriginCreatePostResponse>(path.POSTS, originPayload);
-      // return { postId: data.data.postId };
-
-      return { postId: '2' };
+      const originPayload: OriginCreatePostPayload = {
+        userId: payload.userId,
+        recipe: {
+          recipe: payload.recipe.name,
+          required_ingredients: payload.recipe.ingredients,
+          instructions: payload.recipe.instructions,
+          addtional_ingredients_to_purchase: [],
+          suggestion_time: payload.recipe.time,
+          difficulty: payload.recipe.difficulty,
+        },
+      };
+      // eslint-disable-next-line  @typescript-eslint/no-unsafe-argument
+      const { data } = await axiosClient.post<OriginCreatePostResponse>(path.POSTS, originPayload);
+      return { postId: data.data.postId };
     },
     ...options,
   });
 
 /** getPostById */
-// interface OriginGetPostsResponse {
-//   status: string;
-//   data: {
-//     posts: {
-//       id: string;
-//       recipe_img: string | null;
-//       user_id: string;
-//       review: string | null;
-//       type: 'draft';
-//       recipe: {
-//         recipe: string;
-//         required_ingredients: string[];
-//         instructions: string[];
-//         addtional_ingredients_to_purchase: string[];
-//         suggestion_time: string;
-//         difficulty: string;
-//       };
-//     }[];
-//   };
-// }
+interface OriginGetPostsResponse {
+  status: string;
+  data: {
+    posts: {
+      id: string;
+      recipe_img: string | null;
+      user_id: string;
+      review: string | null;
+      type: 'draft';
+      recipe: {
+        recipe: string;
+        required_ingredients: string[];
+        instructions: string[];
+        addtional_ingredients_to_purchase: string[];
+        suggestion_time: string;
+        difficulty: string;
+      };
+    }[];
+  };
+}
 
-// interface OriginGetPostByIdResponse {
-//   status: string;
-//   data: {
-//     user_id: string;
-//     recipe: {
-//       recipe: string;
-//       required_ingredients: string[];
-//       instructions: string[];
-//       addtional_ingredients_to_purchase: string[];
-//       suggestion_time: string;
-//       difficulty: string;
-//     };
-//     // e.g. 'https://storage.googleapis.com/eco-bites/fridge-pictures/6.jpeg';
-//     recipe_img: string;
-//     review: string;
-//     type: string;
-//     created_at: {
-//       _seconds: number;
-//       _nanoseconds: number;
-//     };
-//   };
-// }
+interface OriginGetPostByIdResponse {
+  status: string;
+  data: {
+    user_id: string;
+    recipe: {
+      recipe: string;
+      required_ingredients: string[];
+      instructions: string[];
+      addtional_ingredients_to_purchase: string[];
+      suggestion_time: string;
+      difficulty: string;
+    };
+    // e.g. 'https://storage.googleapis.com/eco-bites/fridge-pictures/6.jpeg';
+    recipe_img: string;
+    review: string;
+    type: string;
+    created_at: {
+      _seconds: number;
+      _nanoseconds: number;
+    };
+  };
+}
 
 interface GetPostByIdResponse {
-  post: CookHistory;
+  post: CookHistory | null;
 }
 
 export const usePost = (
@@ -193,81 +191,57 @@ export const usePost = (
     queryFn: async () => {
       console.log('call getPostById', { postId });
 
-      // TODO: check api after cors
-      // const { data: result } = await axiosClient.get<OriginGetPostByIdResponse>(
-      //   `${path.POSTS}/${postId}`,
-      // );
+      const { data: result } = await axiosClient.get<OriginGetPostByIdResponse>(
+        `${path.POSTS}/${postId}`,
+      );
 
-      // if (result.status === 'ok')
-      //   return {
-      //     post: {
-      //       id: postId,
-      //       comment: result.data.review,
-      //       img: result.data.recipe_img,
-      //       isDone: result.data.type !== 'draft',
-      //       name: result.data.recipe.recipe,
-      //       ingredients: result.data.recipe.required_ingredients,
-      //       time: result.data.recipe.suggestion_time, // TODO: check with (mins) or not
-      //       difficulty: result.data.recipe.difficulty,
-      //       instructions: result.data.recipe.instructions,
-      //     },
-      //   };
+      if (result.status === 'ok') {
+        return {
+          post: {
+            id: postId,
+            comment: result.data.review,
+            img: result.data.recipe_img,
+            isDone: result.data.type !== 'draft',
+            name: result.data.recipe.recipe,
+            ingredients: result.data.recipe.required_ingredients,
+            time: result.data.recipe.suggestion_time,
+            difficulty: result.data.recipe.difficulty,
+            instructions: result.data.recipe.instructions,
+          },
+        };
+      }
 
       return {
-        post: mockCookHistory.find((history) => history.id === postId) || mockCookHistory[1],
+        post: null,
       };
     },
     ...options,
   });
-
-// interface OriginGetPostsResponse {
-//   status: string;
-//   data: {
-//     posts: {
-//       id: string;
-//       recipe_img: string | null;
-//       user_id: string;
-//       review: string | null;
-//       type: 'draft';
-//       recipe: {
-//         recipe: string;
-//         required_ingredients: string[];
-//         instructions: string[];
-//         addtional_ingredients_to_purchase: string[];
-//         suggestion_time: string;
-//         difficulty: string;
-//       };
-//     }[];
-//   };
-// }
 
 /** updatePostById */
 interface UpdatePostPayload {
   postId: string;
   recipeImgUrl: string;
   review: string;
+  isSubmitted?: boolean;
 }
 
-interface OriginUpdatePostPayload extends UpdatePostPayload {
-  postId: string;
+interface OriginUpdatePostResponse {
+  status: string;
+  data: {
+    recipe_img: string;
+    type: 'draft' | 'published';
+    review: string;
+    published_at: {
+      _seconds: number;
+      _nanoseconds: number;
+    };
+    updated_at: {
+      _seconds: number;
+      _nanoseconds: number;
+    };
+  };
 }
-
-// interface OriginUpdatePostResponse {
-//   status: string;
-//   data: {
-//     recipe_img: string;
-//     type: 'draft' | 'published';
-//     review: string;
-//     published_at: {
-//       _seconds: number;
-//       _nanoseconds: number;
-//     };
-//     updated_at: {
-//       _seconds: number;
-//       _nanoseconds: number;
-//     };
-//   };
-// }
 
 interface UpdatePostResponse {
   status: string;
@@ -280,16 +254,17 @@ export const useUpdatePost = (
   >,
 ) =>
   useMutation({
-    mutationFn: async ({ postId, ...payload }: OriginUpdatePostPayload) => {
+    mutationFn: async ({ postId, ...payload }: UpdatePostPayload) => {
       console.log('call updatePost', { postId, payload });
-      // TODO: finish api
-      // const { data } = await axiosClient.patch<OriginUpdatePostResponse>(
-      //   `${path.POSTS}/${postId}`,
-      //   payload,
-      // );
-      // return { status: data.status };
-
-      return { status: 'ok' };
+      const { data } = await axiosClient.patch<OriginUpdatePostResponse>(
+        `${path.POSTS}/${postId}`,
+        {
+          recipeImgUrl: payload.recipeImgUrl,
+          review: payload.review,
+          type: payload.isSubmitted ? 'published' : 'draft',
+        },
+      );
+      return { status: data.status };
     },
     ...options,
   });
@@ -300,12 +275,12 @@ interface UploadImagePayload {
   userId: string;
 }
 
-// interface OriginUploadImageResponse {
-//   status: string;
-//   data: {
-//     url: string;
-//   };
-// }
+interface OriginUploadImageResponse {
+  status: string;
+  data: {
+    url: string;
+  };
+}
 
 interface UploadImageResponse {
   url: string | null;
@@ -321,55 +296,22 @@ export const useUploadImage = (
     mutationFn: async ({ image, userId }: UploadImagePayload) => {
       console.log('call uploadImage', { image, userId });
 
-      // TODO: finish api
-      // const formData = new FormData();
-      // formData.append('image', image);
-      // formData.append('userId', userId);
+      const formData = new FormData();
+      formData.append('image', image);
+      formData.append('userId', userId);
 
-      // // eslint-disable-next-line  @typescript-eslint/no-unsafe-argument
-      // const { data } = await axiosClient.post<OriginUploadImageResponse>(
-      //   path.UPLOAD_IMAGE,
-      //   formData,
-      //   {
-      //     headers: {
-      //       'Content-Type': 'multipart/form-data', // 設定正確的 Content-Type
-      //     },
-      //   },
-      // );
-      // return { url: data.data.url || null };
+      // eslint-disable-next-line  @typescript-eslint/no-unsafe-argument
+      const { data } = await axiosClient.post<OriginUploadImageResponse>(
+        path.UPLOAD_IMAGE,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // 設定正確的 Content-Type
+          },
+        },
+      );
 
-      return { url: mockCookHistory[1].img };
-    },
-    ...options,
-  });
-
-/** finishPost */
-interface FinishPostPayload {
-  userId: string;
-  postId: string;
-}
-
-interface FinishPostResponse {
-  status: string;
-}
-
-export const useFinishPost = (
-  options?: Omit<
-    UseMutationOptions<FinishPostResponse, Error, FinishPostPayload, unknown>,
-    'payload' | 'variables'
-  >,
-) =>
-  useMutation({
-    mutationFn: async ({ postId, ...payload }: FinishPostPayload) => {
-      console.log('call finishPost', { postId, payload });
-      // TODO: finish api, not sure path
-      // const { data } = await axiosClient.post<FinishPostResponse>(
-      //   `${path.FINISH_POST}/${postId}`,
-      //   payload,
-      // );
-      // return { status: data.status };
-
-      return { status: 'ok' };
+      return { url: data.data.url || null };
     },
     ...options,
   });

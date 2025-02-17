@@ -29,7 +29,7 @@ const CookHistoryCard: FunctionComponent<CookHistoryCardProps> = ({
   sx,
 }: CookHistoryCardProps) => {
   return (
-    <Card sx={{ ...sx, position: 'relative' }}>
+    <Card sx={{ ...sx, position: 'relative', order: isDone ? 1 : 0 }}>
       <CardActionArea onClick={onClick}>
         {img ? (
           <CardMedia sx={{ height: 120 }} image={img} title="" />

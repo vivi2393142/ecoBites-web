@@ -178,7 +178,9 @@ const RecipeCard: FunctionComponent<RecipeCardProps> = ({
           : {}),
       }}
     >
-      <Box sx={type !== 'simple' ? { display: 'flex', gap: 2 } : {}}>
+      <Box
+        sx={type !== 'simple' ? { display: 'flex', gap: 2, justifyContent: 'space-between' } : {}}
+      >
         {onClick ? (
           <CardActionArea onClick={onClick}>
             <RecipeCardHeader {...headerProps} />
