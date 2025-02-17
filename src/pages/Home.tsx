@@ -12,11 +12,12 @@ import { mockCookHistory, mockRecipes } from 'libs/mockData';
 import { useScanResultAtom } from 'stores/atoms/scanResult';
 import { pageSettings } from 'libs/settings';
 import { Page, Recipe } from 'libs/schema';
+import { uploadPhotoFile } from 'libs/utils';
+import { useSnackbarAtom } from 'stores/atoms/snackbar';
 
 import MainLayout from 'components/common/MainLayout';
 import RecipeCard from 'components/RecipeCard';
 import CookHistoryCard from 'components/CookHistoryCard';
-import { uploadPhotoFile } from 'libs/utils';
 
 const Home: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Home: FunctionComponent = () => {
   const [uploadedPhoto, setUploadedPhoto] = useState<string | null>(null);
 
   const { addScanResult } = useScanResultAtom();
+  const { showSnackbar } = useSnackbarAtom();
 
   const handleClickScan = useCallback(() => {
     void (async () => {
@@ -32,12 +34,15 @@ const Home: FunctionComponent = () => {
         setUploadedPhoto(newPhoto);
         // TODO: call api to get results
         addScanResult({ recommendedRecipes: mockRecipes });
+        showSnackbar({
+          message: `You got a new ingredient card! Check 'Rewards' to see the details.`,
+        });
         navigate(pageSettings[Page.SCAN].route);
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [navigate, addScanResult]);
+  }, [navigate, addScanResult, showSnackbar]);
 
   // TODO: remove this
   useEffect(() => {
