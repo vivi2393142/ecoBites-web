@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ecoBites-web/static/css/main.756bb6cb.css",
-    "main.js": "/ecoBites-web/static/js/main.98408070.js",
+    "main.js": "/ecoBites-web/static/js/main.febeb375.js",
     "static/media/salad.png": "/ecoBites-web/static/media/salad.66adc90fe9df037fa3d5.png",
     "static/media/fried_rice.png": "/ecoBites-web/static/media/fried_rice.1ea62f830c163237ceb9.png",
     "static/media/cake.png": "/ecoBites-web/static/media/cake.66c7f72f6b892b86370c.png",
@@ -19,10 +19,10 @@
     "static/media/avatar.svg": "/ecoBites-web/static/media/avatar.4ddb1906c157d7cbc2facc747203ec90.svg",
     "index.html": "/ecoBites-web/index.html",
     "main.756bb6cb.css.map": "/ecoBites-web/static/css/main.756bb6cb.css.map",
-    "main.98408070.js.map": "/ecoBites-web/static/js/main.98408070.js.map"
+    "main.febeb375.js.map": "/ecoBites-web/static/js/main.febeb375.js.map"
   },
   "entrypoints": [
     "static/css/main.756bb6cb.css",
-    "static/js/main.98408070.js"
+    "static/js/main.febeb375.js"
   ]
 }
