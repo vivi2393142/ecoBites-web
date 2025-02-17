@@ -56,7 +56,7 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
         // addScanResult({ recommendedRecipes: mockRecipes });
         addScanPhoto({ uploadedPhoto: newPhoto });
         showSnackbar({
-          message: `You got a new ingredient card! Check 'Rewards' to see the details.`,
+          message: `You got a new ingredient card! Check REWARDS to see the details.`,
         });
         navigate(pageSettings[Page.SCAN].route);
       } catch (error) {

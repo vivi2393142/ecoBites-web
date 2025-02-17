@@ -66,14 +66,14 @@ export const theme = createTheme({
     },
     h5: {
       fontSize: '1rem',
-      fontWeight: 500,
+      fontWeight: 550,
       // fontSize: '1.5rem',
       // lineHeight: 1.334,
       // letterSpacing: '0em',
     },
     h6: {
-      fontSize: '0.9rem',
-      // fontWeight: 500,
+      fontSize: '0.875rem',
+      fontWeight: 550,
       // fontSize: '1.25rem',
       lineHeight: 1.35,
       // letterSpacing: '0.0075em',

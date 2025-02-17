@@ -94,22 +94,20 @@ const Rewards: FunctionComponent = () => {
   return (
     <MainLayout noPadding>
       <TabContext value={tab}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList
-            onChange={handleChange}
-            sx={(theme) => ({ display: 'flex', background: theme.palette.background.default })}
-          >
-            {Object.values(RewardTab).map((value) => (
-              <Tab key={value} label={capitalize(value)} value={value} sx={{ flex: 1 }} />
-            ))}
-          </TabList>
-        </Box>
-        <TabPanel value={RewardTab.REWARDS} sx={{ py: 0, px: 2 }}>
+        <TabList
+          onChange={handleChange}
+          sx={(theme) => ({ display: 'flex', background: theme.palette.background.default })}
+        >
+          {Object.values(RewardTab).map((value) => (
+            <Tab key={value} label={capitalize(value)} value={value} sx={{ flex: 1 }} />
+          ))}
+        </TabList>
+        <TabPanel value={RewardTab.REWARDS} sx={{ py: 0, px: 2, overflow: 'auto' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
             <Typography variant="h5" sx={{ mt: 0.75 }}>
               Cuisines
             </Typography>
-            <Grid container spacing={2}>
+            <Grid container spacing={1.5}>
               {Object.values(RewardCuisine).map((type) => (
                 <Grid
                   key={type}
@@ -148,7 +146,7 @@ const Rewards: FunctionComponent = () => {
             </Grid>
           </Box>
         </TabPanel>
-        <TabPanel value={RewardTab.MIX} sx={{ py: 0, px: 2 }}>
+        <TabPanel value={RewardTab.MIX} sx={{ py: 1, px: 2, overflow: 'auto' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             {lackCuisines.map((cuisine) => (
               <MixCuisineCard

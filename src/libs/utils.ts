@@ -59,11 +59,11 @@ export const uploadPhotoFile = (): Promise<File> =>
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*,video/*');
 
-    const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+    // const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
 
-    if (isMobile) {
-      input.setAttribute('capture', 'environment');
-    }
+    // if (isMobile) {
+    //   input.setAttribute('capture', 'environment');
+    // }
 
     input.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;

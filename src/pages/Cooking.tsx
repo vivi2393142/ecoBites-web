@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import OutdoorGrillIcon from '@mui/icons-material/OutdoorGrill';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import { Page, RewardIngredient } from 'libs/schema';
 import { ingredientToImage, pageSettings } from 'libs/settings';
@@ -35,10 +36,9 @@ const EarnedCard: FunctionComponent<EarnedCardProps> = ({ ingredient }) => {
         p: 1.5,
         gap: 1.5,
         alignItems: 'center',
-        width: '75%',
       }}
     >
-      <img alt={ingredient} src={ingredientToImage[ingredient]} />
+      <img alt={ingredient} src={ingredientToImage[ingredient]} style={{ maxWidth: '100%' }} />
       <Typography variant="h6">{capitalize(ingredient)}</Typography>
     </Paper>
   );
@@ -73,20 +73,13 @@ const EarnedReward: FunctionComponent<EarnedRewardProps> = ({ ingredients, onBac
           </Typography>
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          gap: 2,
-          flexShrink: 0,
-          overflowX: 'auto',
-          scrollbarWidth: 'none',
-          width: '100%',
-        }}
-      >
+      <Grid container spacing={2} mb={1}>
         {ingredients.map((ingredient) => (
-          <EarnedCard key={ingredient} ingredient={ingredient} />
+          <Grid key={ingredient} xs={4}>
+            <EarnedCard key={ingredient} ingredient={ingredient} />
+          </Grid>
         ))}
-      </Box>
+      </Grid>
       <Box sx={{ display: 'flex', gap: 1.5, flexDirection: 'column', width: '100%' }}>
         <Button variant="contained" onClick={handleToRewards}>
           Go to My Rewards
