@@ -99,7 +99,7 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
       <Container
         sx={{
           flex: 1,
-          overflow: 'scroll',
+          overflow: 'auto',
           display: 'flex',
           flexDirection: 'column',
           gap: 0.75,
