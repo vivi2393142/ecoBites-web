@@ -46,56 +46,56 @@ interface GetRecommendedRecipesResponse {
 }
 
 // TODO: check api, use local currently
-export const useRecommendedRecipes = (
-  { image, amount }: { image: File; amount: string },
-  options?: Omit<
-    DefinedInitialDataOptions<GetRecommendedRecipesResponse, Error, GetRecommendedRecipesResponse>,
-    'queryKey' | 'initialData'
-  >,
-) =>
-  useQuery<GetRecommendedRecipesResponse>({
-    queryKey: ['getRecipes'],
-    queryFn: async () => {
-      console.log('call getRecipes', { image, amount });
-      const formData = new FormData();
-      formData.append('image', image);
-      formData.append('amount', amount);
+// export const useRecommendedRecipes = (
+//   { image, amount }: { image: File; amount: string },
+//   options?: Omit<
+//     DefinedInitialDataOptions<GetRecommendedRecipesResponse, Error, GetRecommendedRecipesResponse>,
+//     'queryKey' | 'initialData'
+//   >,
+// ) =>
+//   useQuery<GetRecommendedRecipesResponse>({
+//     queryKey: ['getRecipes'],
+//     queryFn: async () => {
+//       console.log('call getRecipes', { image, amount });
+//       const formData = new FormData();
+//       formData.append('image', image);
+//       formData.append('amount', amount);
 
-      const { data: result } = await axiosClientLocal.get<OriginGetRecommendedRecipesResponse>(
-        path.GET_RECIPES_FROM_PHOTO,
-        {
-          params: formData,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
+//       const { data: result } = await axiosClientLocal.get<OriginGetRecommendedRecipesResponse>(
+//         path.GET_RECIPES_FROM_PHOTO,
+//         {
+//           params: formData,
+//           headers: {
+//             'Content-Type': 'multipart/form-data',
+//           },
+//         },
+//       );
 
-      const parsedResult = parseRecipes(result.data) as OriginRecipe[];
-      const mappingResult = parsedResult.reduce<Recipe[]>((acc, curr) => {
-        if (
-          curr.recipe &&
-          isArray(curr.required_ingredients) &&
-          curr.suggestion_time &&
-          curr.difficulty &&
-          isArray(curr.instructions)
-        ) {
-          acc.push({
-            name: curr.recipe,
-            ingredients: curr.required_ingredients,
-            time: curr.suggestion_time,
-            difficulty: capitalize(curr.difficulty),
-            instructions: curr.instructions,
-          });
-        }
-        return acc;
-      }, []);
+//       const parsedResult = parseRecipes(result.data) as OriginRecipe[];
+//       const mappingResult = parsedResult.reduce<Recipe[]>((acc, curr) => {
+//         if (
+//           curr.recipe &&
+//           isArray(curr.required_ingredients) &&
+//           curr.suggestion_time &&
+//           curr.difficulty &&
+//           isArray(curr.instructions)
+//         ) {
+//           acc.push({
+//             name: curr.recipe,
+//             ingredients: curr.required_ingredients,
+//             time: curr.suggestion_time,
+//             difficulty: capitalize(curr.difficulty),
+//             instructions: curr.instructions,
+//           });
+//         }
+//         return acc;
+//       }, []);
 
-      if (result.status === 'ok') return { recommendedRecipes: mappingResult };
-      return { recommendedRecipes: null };
-    },
-    ...options,
-  });
+//       if (result.status === 'ok') return { recommendedRecipes: mappingResult };
+//       return { recommendedRecipes: null };
+//     },
+//     ...options,
+//   });
 
 /** getFridgeRecipesByUrl */
 // TODO: check api, use local currently
@@ -107,11 +107,13 @@ export const useRecommendedRecipesByUrl = (
   >,
 ) =>
   useQuery<GetRecommendedRecipesResponse>({
-    queryKey: ['getRecipes'],
+    queryKey: ['getRecipesByUrl', imgUrl],
     queryFn: async () => {
+      console.log('getRecipesByUrl', { imgUrl });
       const { data: result } = await axiosClientLocal.get<OriginGetRecommendedRecipesResponse>(
         `${path.GET_RECIPES_FROM_PHOTO}/url?url=${imgUrl}&amount=${amount}`,
       );
+      console.log('after getRecipesByUrl', { imgUrl });
 
       const parsedResult = parseRecipes(result.data) as OriginRecipe[];
       const mappingResult = parsedResult.reduce<Recipe[]>((acc, curr) => {

@@ -45,12 +45,9 @@ export const usePosts = (
   useQuery<GetPostsResponse>({
     queryKey: ['getPosts'],
     queryFn: async () => {
-      console.log('call getPosts', { userId });
       const { data: result } = await axiosClient.get<OriginGetPostsResponse>(
         `${path.POSTS}?userId=${userId}`,
       );
-
-      console.log('56', { result });
 
       if (result.status === 'ok') {
         return {
@@ -111,7 +108,6 @@ export const useCreatePost = (
 ) =>
   useMutation({
     mutationFn: async (payload: CreatePostPayload) => {
-      console.log('call createPost', { payload });
       const originPayload: OriginCreatePostPayload = {
         userId: payload.userId,
         recipe: {
@@ -164,7 +160,6 @@ interface OriginGetPostByIdResponse {
       suggestion_time: string;
       difficulty: string;
     };
-    // e.g. 'https://storage.googleapis.com/eco-bites/fridge-pictures/6.jpeg';
     recipe_img: string;
     review: string;
     type: string;
@@ -189,8 +184,6 @@ export const usePost = (
   useQuery<GetPostByIdResponse>({
     queryKey: ['getPostById', postId],
     queryFn: async () => {
-      console.log('call getPostById', { postId });
-
       const { data: result } = await axiosClient.get<OriginGetPostByIdResponse>(
         `${path.POSTS}/${postId}`,
       );
@@ -255,7 +248,6 @@ export const useUpdatePost = (
 ) =>
   useMutation({
     mutationFn: async ({ postId, ...payload }: UpdatePostPayload) => {
-      console.log('call updatePost', { postId, payload });
       const { data } = await axiosClient.patch<OriginUpdatePostResponse>(
         `${path.POSTS}/${postId}`,
         {
@@ -294,8 +286,6 @@ export const useUploadImage = (
 ) =>
   useMutation({
     mutationFn: async ({ image, userId }: UploadImagePayload) => {
-      console.log('call uploadImage', { image, userId });
-
       const formData = new FormData();
       formData.append('image', image);
       formData.append('userId', userId);
@@ -306,7 +296,7 @@ export const useUploadImage = (
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data', // 設定正確的 Content-Type
+            'Content-Type': 'multipart/form-data',
           },
         },
       );

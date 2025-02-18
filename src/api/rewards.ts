@@ -91,8 +91,6 @@ export const useReward = (
   useQuery<GetRewardResponse>({
     queryKey: ['getReward'],
     queryFn: async () => {
-      console.log('call getReward', { amount });
-
       const { data: result } = await axiosClient.get<OriginGetRewardResponse>(
         `${path.REWARDS}?amount=${amount}&userId=${userId}`,
       );

@@ -13,24 +13,22 @@ type TimeAndDifficultyProps = Pick<Recipe, 'time' | 'difficulty'>;
 const TimeAndDifficulty: FunctionComponent<TimeAndDifficultyProps> = ({
   time,
   difficulty,
-}: TimeAndDifficultyProps) => {
-  return (
+}: TimeAndDifficultyProps) => (
+  <Box sx={{ display: 'flex', gap: 0.5 }}>
     <Box sx={{ display: 'flex', gap: 0.5 }}>
-      <Box sx={{ display: 'flex', gap: 0.5 }}>
-        <AccessTimeIcon fontSize="small" />
-        <Typography variant="body2" noWrap>
-          {time} mins
-        </Typography>
-      </Box>
-      <Typography variant="body2">•</Typography>
-      <Box sx={{ display: 'flex', gap: 0.5 }}>
-        <AutoGraphIcon fontSize="small" />
-        <Typography variant="body2" noWrap>
-          {capitalize(difficulty)}
-        </Typography>
-      </Box>
+      <AccessTimeIcon fontSize="small" />
+      <Typography variant="body2" noWrap>
+        {time} mins
+      </Typography>
     </Box>
-  );
-};
+    <Typography variant="body2">•</Typography>
+    <Box sx={{ display: 'flex', gap: 0.5 }}>
+      <AutoGraphIcon fontSize="small" />
+      <Typography variant="body2" noWrap>
+        {capitalize(difficulty)}
+      </Typography>
+    </Box>
+  </Box>
+);
 
 export default TimeAndDifficulty;

@@ -1,5 +1,4 @@
-import { useCallback, useMemo } from 'react';
-import type { FunctionComponent, PropsWithChildren } from 'react';
+import { useCallback, useMemo, type FunctionComponent, type PropsWithChildren } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';

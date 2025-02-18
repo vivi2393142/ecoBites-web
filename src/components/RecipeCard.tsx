@@ -1,11 +1,11 @@
 import {
-  ReactNode,
+  type ReactNode,
   useCallback,
   useState,
   type FunctionComponent,
   type PropsWithChildren,
 } from 'react';
-import { styled, type SxProps, Theme } from '@mui/material/styles';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';

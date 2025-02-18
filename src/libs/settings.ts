@@ -28,7 +28,7 @@ export const pageSettings: Record<Page, PageSetting> = {
     label: 'Scan Result',
   },
   [Page.COOKING]: {
-    route: '/cooking', // with recipe id
+    route: '/cooking',
     label: 'Cooking',
   },
 };

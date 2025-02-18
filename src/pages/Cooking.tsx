@@ -1,6 +1,6 @@
 import {
-  ChangeEvent,
-  CSSProperties,
+  type ChangeEvent,
+  type CSSProperties,
   useCallback,
   useEffect,
   useState,
@@ -63,22 +63,20 @@ interface EarnedCardProps {
   ingredient: RewardIngredient;
 }
 
-const EarnedCard: FunctionComponent<EarnedCardProps> = ({ ingredient }) => {
-  return (
-    <Paper
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        p: 1.5,
-        gap: 1.5,
-        alignItems: 'center',
-      }}
-    >
-      <img alt={ingredient} src={ingredientToImage[ingredient]} style={{ maxWidth: '100%' }} />
-      <Typography variant="h6">{capitalize(ingredient)}</Typography>
-    </Paper>
-  );
-};
+const EarnedCard: FunctionComponent<EarnedCardProps> = ({ ingredient }) => (
+  <Paper
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      p: 1.5,
+      gap: 1.5,
+      alignItems: 'center',
+    }}
+  >
+    <img alt={ingredient} src={ingredientToImage[ingredient]} style={{ maxWidth: '100%' }} />
+    <Typography variant="h6">{capitalize(ingredient)}</Typography>
+  </Paper>
+);
 
 interface EarnedRewardProps {
   ingredients: RewardIngredient[];

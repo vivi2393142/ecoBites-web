@@ -104,7 +104,7 @@ const Home: FunctionComponent = () => {
       <Box
         sx={{ display: 'flex', gap: 1, flexShrink: 0, overflowX: 'auto', scrollbarWidth: 'none' }}
       >
-        {randomRecipesData?.recommendedRecipes
+        {randomRecipesData?.recommendedRecipes?.length
           ? randomRecipesData.recommendedRecipes.map((recipe, idx) => (
               <RecipeCard
                 // eslint-disable-next-line react/no-array-index-key

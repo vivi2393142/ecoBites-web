@@ -10,7 +10,6 @@ import { Page, Recipe } from 'libs/schema';
 import { pageSettings } from 'libs/settings';
 import { useScanResultAtom } from 'stores/atoms/scanResult';
 import { useRecommendedRecipesByUrl } from 'api/recipes';
-import { fileToBase64 } from 'libs/utils';
 import { useCreatePost, useUploadImage } from 'api/posts';
 import { useSnackbarAtom } from 'stores/atoms/snackbar';
 import { userId } from 'api/axiosClient';
@@ -25,10 +24,8 @@ const Scan: FunctionComponent = () => {
   const { scanResult, addScanResult } = useScanResultAtom();
   const { showSnackbar } = useSnackbarAtom();
 
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [isGetRecommend, setIsGetRecommend] = useState(false);
   const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
 
   const uploadImage = useUploadImage();
   const { data } = useRecommendedRecipesByUrl(
@@ -40,8 +37,10 @@ const Scan: FunctionComponent = () => {
   );
 
   useEffect(() => {
-    if (!scanResult.uploadedPhoto || uploadedPhotoUrl || isUploading) return;
-    setIsUploading(true);
+    if (!scanResult.uploadedPhoto || uploadedPhotoUrl || uploadImage.isPending) {
+      return;
+    }
+
     uploadImage.mutate(
       {
         image: scanResult.uploadedPhoto,
@@ -49,23 +48,23 @@ const Scan: FunctionComponent = () => {
       },
       {
         onSuccess: (response) => {
-          setUploadedPhotoUrl(response.url);
+          setUploadedPhotoUrl((prev) => prev || response.url);
         },
+        onError: () => {},
+        onSettled: () => {},
       },
     );
-  }, [scanResult.uploadedPhoto, uploadImage, uploadedPhotoUrl, isUploading]);
+  }, [scanResult.uploadedPhoto, uploadedPhotoUrl, uploadImage]);
 
-  // // TODO: change to useRecommendedRecipes
-  // const { data, isLoading } = useRandomRecommendedRecipes({
-  //   amount: 3,
-  // });
+  useEffect(() => {
+    if (data) addScanResult({ recommendedRecipes: data.recommendedRecipes });
+  }, [data, addScanResult]);
+
   const { data: rewardData } = useReward({ userId, amount: 1 }, { enabled: isGetRecommend });
   const createPost = useCreatePost();
 
   useEffect(() => {
-    if (data) {
-      setIsGetRecommend(true);
-    }
+    if (data) setIsGetRecommend(true);
   }, [data]);
 
   useEffect(() => {
@@ -100,26 +99,13 @@ const Scan: FunctionComponent = () => {
     [navigate, createPost, showSnackbar],
   );
 
-  useEffect(() => {
-    void (async () => {
-      if (scanResult.uploadedPhoto) {
-        const base64Photo = await fileToBase64(scanResult.uploadedPhoto);
-        setImgSrc(base64Photo);
-      }
-    })();
-  }, [scanResult.uploadedPhoto]);
-
-  useEffect(() => {
-    if (data) addScanResult({ recommendedRecipes: data.recommendedRecipes });
-  }, [data, addScanResult]);
-
   return (
     <MainLayout>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
         <Typography variant="h5" sx={{ mt: 0.75 }}>
           Your Photo
         </Typography>
-        {imgSrc && (
+        {uploadedPhotoUrl && (
           <Box
             sx={(theme) => ({
               background: theme.palette.background.default,
@@ -127,7 +113,7 @@ const Scan: FunctionComponent = () => {
               borderRadius: 1,
             })}
           >
-            <img src={imgSrc} alt="Captured" style={{ width: '100%' }} />
+            <img src={uploadedPhotoUrl} alt="Captured" style={{ width: '100%' }} />
           </Box>
         )}
         <Typography variant="h5" sx={{ mt: 0.75 }}>

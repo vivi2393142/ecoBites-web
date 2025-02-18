@@ -8,7 +8,6 @@ export enum Page {
 export interface PageSetting {
   route: string;
   label: string;
-  // children?: Record<string, Pick<GuardFunctionSetting, 'route' | 'defaultLabel'>>;
 }
 
 export enum RewardIngredient {
