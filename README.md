@@ -32,25 +32,29 @@ Note: This web app was designed primarily for mobile use, and due to time constr
 
 ## How to Use
 
-1. **Scan Ingredients**
+1. Scan Your Fridge & Get Recipe Suggestions:
 
-   Take a picture of your fridge's contents.
+   Snap a photo of your fridge, and AI will analyze the ingredients to suggest dishes.
 
-2. **Get Recipe Suggestions**
+   <img src="readme_imges/scan.gif" width="200"/>
 
-   AI analyzes the image and recommends dishes.
+2. Follow Recipes, Save Progress & Earn Rewards
 
-3. **Start Cooking**
+   Cook with step-by-step instructions, add notes and photos, and earn rewards upon completion.
 
-   Follow step-by-step instructions.
+   <img src="readme_imges/cooking.gif" width="200"/>
 
-4. **Earn Rewards**
+3. Reward System
 
-   Collect ingredient cards by completing recipes.
+   Collect ingredient cards as basic rewards and combine them to unlock advanced cuisine cards.
 
-5. **Unlock New Recipes**
+   <img src="readme_imges/reward.gif" width="200"/>
 
-   Use ingredient cards to combine and discover new dishes.
+4. Discover & Track Recipes
+
+   Get random recipe suggestions and revisit your cooking history anytime.
+
+   <img src="readme_imges/other.gif" width="200"/>
 
 ## Dependencies
 
